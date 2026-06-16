@@ -1,26 +1,121 @@
 @import "tailwindcss";
 
+@theme {
+  /* Brand palette — sourced from the City Stays design */
+  --color-terracotta: #c0613a;
+  --color-terracotta-dark: #a64f2c;
+  --color-terracotta-soft: #f2e0d6;
+
+  --color-ink: #403c34;
+  --color-ink-deep: #262521;
+  --color-ink-soft: #7a7264;
+
+  --color-sand: #f6eee3;
+  --color-sand-light: #f8f2e8;
+  --color-sand-deep: #eadfce;
+  --color-sand-line: #e7ddcc;
+
+  --color-teal: #163a41;
+  --color-teal-soft: #2c8b83;
+  --color-teal-mist: #cfe3e1;
+
+  --color-gold: #a6864e;
+
+  /* Typography */
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-kaushan), "Brush Script MT", cursive;
+
+  /* Easing */
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-sand);
+  --foreground: var(--color-ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Display headings default to Cormorant */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Small uppercase eyebrow labels used throughout the design */
+.eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 600;
+  font-size: 0.72rem;
+}
+
+/* Reveal primitives — content is visible by default; GSAP applies the hidden
+   start state before paint (layout effect) and animates it in on scroll. This
+   keeps content visible if JS is slow, fails, or the user prefers reduced
+   motion, while avoiding any flash in normal browsers. */
+.reveal {
+  will-change: transform, opacity;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: riseIn 0.7s var(--ease-lux) both;
+}
+
+@keyframes slowZoom {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.16);
+  }
+}
+.slow-zoom {
+  animation: slowZoom 14s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .slow-zoom {
+    animation: none;
+  }
+}
+
+::selection {
+  background: var(--color-terracotta);
+  color: #fff;
+}
+
+/* Premium focus ring */
+*:focus-visible {
+  outline: 2px solid var(--color-terracotta);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
