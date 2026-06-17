@@ -6,9 +6,18 @@ import { NAV_LINKS } from "../lib/data";
 import { Menu, Close, ArrowRight } from "./icons";
 import Logo from "./Logo";
 
-export default function Header() {
+export default function Header({
+  variant = "overlay",
+}: {
+  /** "overlay" sits transparent over a dark hero; "solid" is for light pages. */
+  variant?: "overlay" | "solid";
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // Light (white) text only when floating transparently over a dark hero.
+  const light = variant === "overlay" && !scrolled;
+  const showBg = variant === "solid" || scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,7 +37,7 @@ export default function Header() {
     <>
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
+        showBg
           ? "bg-sand-light/85 backdrop-blur-md shadow-[0_1px_0_0_rgba(64,60,52,0.08)]"
           : "bg-transparent"
       }`}
@@ -37,7 +46,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" aria-label="City Stays home">
           <Logo
-            tone={scrolled ? "dark" : "light"}
+            tone={light ? "light" : "dark"}
             size={34}
             className="text-[16px]"
           />
@@ -50,9 +59,9 @@ export default function Header() {
               key={l.label}
               href={l.href}
               className={`relative text-[15px] font-medium transition-colors hover:text-terracotta after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-terracotta after:transition-all after:duration-300 hover:after:w-full ${
-                scrolled
-                  ? "text-ink/90"
-                  : "text-white/90 [text-shadow:0_1px_10px_rgba(20,18,15,0.45)]"
+                light
+                  ? "text-white/90 [text-shadow:0_1px_10px_rgba(20,18,15,0.45)]"
+                  : "text-ink/90"
               }`}
             >
               {l.label}
@@ -64,9 +73,9 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <span
             className={`hidden text-sm font-medium md:inline ${
-              scrolled
-                ? "text-ink/70"
-                : "text-white/80 [text-shadow:0_1px_10px_rgba(20,18,15,0.45)]"
+              light
+                ? "text-white/80 [text-shadow:0_1px_10px_rgba(20,18,15,0.45)]"
+                : "text-ink/70"
             }`}
           >
             Eng

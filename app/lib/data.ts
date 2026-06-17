@@ -249,11 +249,302 @@ export const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
+// ——— Villa detail content ———————————————————————————————————————————————
+
+export const VILLA_HOSTS: Record<string, string> = {
+  "galu-beachfront-villa": "Amani",
+  "tulia-courtyard-house": "Neema",
+  "bahari-pool-retreat": "Hassan",
+  "mwezi-garden-villa": "Zawadi",
+  "pwani-white-house": "Imani",
+  "kaya-lounge-house": "Baraka",
+};
+
+export const VILLA_HIGHLIGHTS = [
+  {
+    icon: "pool",
+    title: "Private beachfront pool",
+    body: "Infinity pool steps from the white-sand beach.",
+  },
+  {
+    icon: "cottage",
+    title: "2-bedroom guest cottage",
+    body: "Independent annexe for extended family or staff.",
+  },
+  {
+    icon: "clock",
+    title: "Self check-in & 24/7 concierge",
+    body: "Arrive any time; our team is on call throughout your stay.",
+  },
+] as const;
+
+export const VILLA_AMENITIES = [
+  "Fast Wi-Fi",
+  "Private infinity pool",
+  "Air conditioning",
+  "Full chef's kitchen",
+  "En-suite bathrooms",
+  "Tropical garden",
+  "Secure parking",
+  "Daily housekeeping",
+] as const;
+
+export const TOTAL_AMENITIES = 32;
+
+export const RATING_BARS = [
+  { label: "Cleanliness", score: 4.9 },
+  { label: "Location", score: 5.0 },
+  { label: "Check-in", score: 4.8 },
+  { label: "Value", score: 4.7 },
+] as const;
+
+export const VILLA_REVIEWS = [
+  {
+    initial: "S",
+    name: "Sofia M.",
+    date: "May 2026",
+    accent: "#2c8b83",
+    quote:
+      "Spotless, serene and impeccably designed. The guest cottage was perfect for my parents and the beach is genuinely 30 seconds away.",
+  },
+  {
+    initial: "J",
+    name: "James O.",
+    date: "April 2026",
+    accent: "#c0613a",
+    quote:
+      "Amani is a wonderful host — quick to respond and full of local tips. The pool at sunset is unreal.",
+  },
+  {
+    initial: "L",
+    name: "Lena B.",
+    date: "March 2026",
+    accent: "#a6864e",
+    quote:
+      "We were a group of eight and never felt crowded. The open-plan living spills right onto the terrace. Will be back.",
+  },
+  {
+    initial: "D",
+    name: "Daniel K.",
+    date: "February 2026",
+    accent: "#163a41",
+    quote:
+      "Best villa we've stayed in on the coast. The kitchen is a dream and the housekeeping team were lovely.",
+  },
+] as const;
+
+export const CLEANING_FEE = 85;
+export const SERVICE_RATE = 0.12; // of the nightly subtotal
+export const DEFAULT_NIGHTS = 5;
+
+export const getVilla = (slug: string) => VILLAS.find((v) => v.slug === slug);
+
+/** Gallery for a villa: its own hero photo plus its destination's gallery. */
+export function villaGallery(v: Villa): string[] {
+  const dest = getDestination(v.destination);
+  const extra = dest ? dest.gallery : [];
+  return [v.image, ...extra].slice(0, 5);
+}
+
+/** A two-paragraph description tailored to the villa. */
+export function villaDescription(v: Villa): string[] {
+  const place = v.location;
+  return [
+    `Discover a serene coastal escape at this stunning home in ${place}, blending modern architecture with tropical tranquillity. Expansive glass doors invite natural light and open onto lush greenery and a breathtaking private pool. The open-plan living and dining area flows seamlessly onto the terrace, where breezes and birdsong set a calming mood.`,
+    `With ${v.beds} bedrooms and ${v.baths} bathrooms, there is space for up to ${v.guests} guests — perfect for families and groups who want privacy without compromise. Your dedicated concierge can arrange a private chef, transfers and excursions before you even arrive.`,
+  ];
+}
+
 export const NAV_LINKS = [
+  { label: "Stays", href: "/destinations/diani" },
   { label: "Destinations", href: "/#destinations" },
-  { label: "Experiences", href: "/#why" },
-  { label: "Journal", href: "/#stories" },
-  { label: "Become a Host", href: "/#cta" },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Journal", href: "/journal" },
+];
+
+// Short marketing copy + tags used on the listing (search) cards.
+export const VILLA_INFO: Record<string, { summary: string; tags: string[] }> = {
+  "galu-beachfront-villa": {
+    summary:
+      "A 5-bedroom modernist estate where glass doors open to a private infinity pool and the white sand of Galu beach beyond.",
+    tags: ["Beachfront", "Private pool", "Guest cottage"],
+  },
+  "tulia-courtyard-house": {
+    summary:
+      "A serene courtyard villa framed by cacti gardens and stepping-stone paths leading down to the sea.",
+    tags: ["Ocean view", "Courtyard", "Chef"],
+  },
+  "bahari-pool-retreat": {
+    summary:
+      "Crisp white walls, a turquoise pool and a private beach cabana moments from the Watamu reef.",
+    tags: ["Private pool", "Beach cabana", "Reef"],
+  },
+  "mwezi-garden-villa": {
+    summary:
+      "Garden suites, a private chef and lantern-lit dinners under the palms in leafy Kilifi.",
+    tags: ["Private chef", "Garden", "Quiet"],
+  },
+  "pwani-white-house": {
+    summary:
+      "A brand-new whitewashed retreat with rooftop views over Malindi's old town and the ocean.",
+    tags: ["New", "Rooftop", "Ocean view"],
+  },
+  "kaya-lounge-house": {
+    summary:
+      "A laid-back beach house with open lounges, hammocks and direct sand access in Diani.",
+    tags: ["Beachfront", "Beach access", "Lounge"],
+  },
+};
+
+export const LISTING_FILTERS = [
+  "Price",
+  "Bedrooms",
+  "Beachfront",
+  "Private pool",
+  "Superhost",
+];
+
+// ——— Experiences ———————————————————————————————————————————————————————
+
+export type Experience = {
+  title: string;
+  place: string;
+  blurb: string;
+  image: string;
+  duration: string;
+  from: number;
+};
+
+export const EXPERIENCES: Experience[] = [
+  {
+    title: "Sunset dhow cruise",
+    place: "Diani",
+    blurb:
+      "Glide along the reef on a hand-built dhow as the sky turns gold, sundowners in hand.",
+    image: "/photos/p03.jpg",
+    duration: "3 hours",
+    from: 70,
+  },
+  {
+    title: "Private chef & Swahili feast",
+    place: "Your villa",
+    blurb:
+      "A coastal tasting menu — swahili spices, fresh seafood — cooked in your own kitchen.",
+    image: "/photos/p06.jpg",
+    duration: "Evening",
+    from: 120,
+  },
+  {
+    title: "Kisite marine snorkelling",
+    place: "Wasini",
+    blurb:
+      "Snorkel coral gardens and spot dolphins in a protected marine park off the south coast.",
+    image: "/photos/p16.jpg",
+    duration: "Full day",
+    from: 95,
+  },
+  {
+    title: "Mount Kenya foothills ride",
+    place: "Nanyuki",
+    blurb:
+      "Ride horseback across the plains with the snow-capped mountain on the horizon.",
+    image: "/photos/p21.jpg",
+    duration: "Half day",
+    from: 110,
+  },
+  {
+    title: "Crater lake & Hell's Gate",
+    place: "Naivasha",
+    blurb:
+      "Cycle past zebra and giraffe beneath dramatic volcanic cliffs in the Rift Valley.",
+    image: "/photos/p19.jpg",
+    duration: "Full day",
+    from: 85,
+  },
+  {
+    title: "Old town heritage walk",
+    place: "Malindi",
+    blurb:
+      "Swahili history, spice markets and centuries-old dhow builders with a local guide.",
+    image: "/photos/p05.jpg",
+    duration: "2 hours",
+    from: 40,
+  },
+];
+
+// ——— Journal ————————————————————————————————————————————————————————————
+
+export type Article = {
+  slug: string;
+  title: string;
+  category: string;
+  excerpt: string;
+  image: string;
+  date: string;
+  read: string;
+};
+
+export const ARTICLES: Article[] = [
+  {
+    slug: "quietest-beaches-diani",
+    title: "Where to find the quietest beaches in Diani",
+    category: "Guides",
+    excerpt:
+      "Beyond the famous stretch of Galu lie coves you'll often have entirely to yourself. Here's where to walk at dawn.",
+    image: "/photos/p03.jpg",
+    date: "June 2026",
+    read: "6 min read",
+  },
+  {
+    slug: "weekend-in-nanyuki",
+    title: "A weekend in Nanyuki, above the clouds",
+    category: "Highlands",
+    excerpt:
+      "Cool mornings, the equator line and Mount Kenya on the horizon — why the highlands are the coast's perfect counterpoint.",
+    image: "/photos/p21.jpg",
+    date: "May 2026",
+    read: "8 min read",
+  },
+  {
+    slug: "how-we-verify-homes",
+    title: "How we verify every City Stays home",
+    category: "Inside City Stays",
+    excerpt:
+      "Every villa is visited in person before it's listed. A look at what our team checks — and why the photos always match.",
+    image: "/photos/p05.jpg",
+    date: "May 2026",
+    read: "5 min read",
+  },
+  {
+    slug: "best-private-chefs",
+    title: "The coast's best private chefs",
+    category: "Food",
+    excerpt:
+      "From Swahili biryani to fresh-caught crab, meet the chefs our concierge books again and again.",
+    image: "/photos/p09.jpg",
+    date: "April 2026",
+    read: "7 min read",
+  },
+  {
+    slug: "packing-for-the-coast",
+    title: "Packing for the Kenyan coast",
+    category: "Tips",
+    excerpt:
+      "Linen, reef-safe sunscreen and not much else. A short, sane packing list for a barefoot week by the sea.",
+    image: "/photos/p07.jpg",
+    date: "April 2026",
+    read: "4 min read",
+  },
+  {
+    slug: "naivasha-slow-weekends",
+    title: "Naivasha: lakes, wine and slow weekends",
+    category: "Highlands",
+    excerpt:
+      "Hippos at dusk, lakeside lunches and an easy drive from the city — the Rift Valley's gentlest escape.",
+    image: "/photos/p19.jpg",
+    date: "March 2026",
+    read: "6 min read",
+  },
 ];
 
 export const villasFor = (slug: string) =>

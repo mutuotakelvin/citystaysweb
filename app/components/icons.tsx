@@ -133,6 +133,116 @@ export const Instagram = (p: IconProps) => (
   </svg>
 );
 
+export const Wifi = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M5 12.5a10 10 0 0 1 14 0" />
+    <path d="M8 15.5a6 6 0 0 1 8 0" />
+    <path d="M2 9.5a15 15 0 0 1 20 0" />
+    <circle cx="12" cy="18.5" r="1" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+export const Waves = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M2 7c2 0 2 1.6 4 1.6S8 7 10 7s2 1.6 4 1.6S16 7 18 7s2 1.6 4 1.6" />
+    <path d="M2 12c2 0 2 1.6 4 1.6S8 12 10 12s2 1.6 4 1.6 2-1.6 4-1.6 2 1.6 4 1.6" />
+    <path d="M2 17c2 0 2 1.6 4 1.6S8 17 10 17s2 1.6 4 1.6 2-1.6 4-1.6 2 1.6 4 1.6" />
+  </svg>
+);
+
+export const Snowflake = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M12 3v18M3 12h18" />
+    <path d="m5.5 5.5 13 13M18.5 5.5l-13 13" />
+    <path d="M12 6 9.5 4M12 6l2.5-2M12 18l-2.5 2M12 18l2.5 2M6 12 4 9.5M6 12l-2 2.5M18 12l2-2.5M18 12l2 2.5" />
+  </svg>
+);
+
+export const ChefHat = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M7 14a4 4 0 1 1 1-7.9 4 4 0 0 1 8 0A4 4 0 1 1 17 14" />
+    <path d="M7 14v5a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-5" />
+    <path d="M8 17h8" />
+  </svg>
+);
+
+export const Leaf = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M5 19c0-8 6-13 14-13 0 8-5 14-13 14a4 4 0 0 1-1-1Z" />
+    <path d="M5 19c3-4 6-6 10-7.5" />
+  </svg>
+);
+
+export const Sparkles = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M12 4l1.6 4.4L18 10l-4.4 1.6L12 16l-1.6-4.4L6 10l4.4-1.6L12 4Z" />
+    <path d="M18 15l.7 1.8L20.5 17.5l-1.8.7L18 20l-.7-1.8L15.5 17.5l1.8-.7L18 15Z" />
+  </svg>
+);
+
+export const Car = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 16v-3.2L6 8.5A2 2 0 0 1 7.8 7.5h8.4A2 2 0 0 1 18 8.5l2 4.3V16" />
+    <path d="M3.5 16h17v2.5h-2.5V16M6.5 18.5V16" />
+    <path d="M4 13h16" />
+    <circle cx="7.5" cy="16" r="0.4" fill="currentColor" />
+    <circle cx="16.5" cy="16" r="0.4" fill="currentColor" />
+  </svg>
+);
+
+export const Clock = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="M12 7v5l3.5 2" />
+  </svg>
+);
+
+export const Share = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M12 15V4M8.5 7.5 12 4l3.5 3.5" />
+    <path d="M6 12v6.5a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5V12" />
+  </svg>
+);
+
+export const Minus = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M6 12h12" />
+  </svg>
+);
+
+export const Plus = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M12 6v12M6 12h12" />
+  </svg>
+);
+
+export const ChevronLeft = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="m14 6-6 6 6 6" />
+  </svg>
+);
+
+export const ChevronRight = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="m10 6 6 6-6 6" />
+  </svg>
+);
+
+export const Filter = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M4 7h16M7 12h10M10 17h4" />
+  </svg>
+);
+
+export const Grid = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <rect x="4" y="4" width="7" height="7" rx="1.5" />
+    <rect x="13" y="4" width="7" height="7" rx="1.5" />
+    <rect x="4" y="13" width="7" height="7" rx="1.5" />
+    <rect x="13" y="13" width="7" height="7" rx="1.5" />
+  </svg>
+);
+
 export const XSocial = (p: IconProps) => (
   <svg {...base} fill="currentColor" stroke="none" {...p}>
     <path d="M17.5 4h2.6l-5.7 6.5L21 20h-5.2l-4-5.3L7 20H4.4l6.1-7L3.6 4h5.3l3.6 4.8L17.5 4Zm-.9 14.4h1.4L8.9 5.5H7.4l9.2 12.9Z" />

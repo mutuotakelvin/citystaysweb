@@ -18,7 +18,7 @@ export default function VillaCard({
   return (
     <article className="reveal group relative flex flex-col">
       <Link
-        href={`/destinations/${villa.destination}`}
+        href={`/villas/${villa.slug}`}
         className="relative block aspect-[4/3] overflow-hidden rounded-2xl"
       >
         <Image

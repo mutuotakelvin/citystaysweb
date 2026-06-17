@@ -6,11 +6,11 @@ import { Facebook, Instagram, XSocial, ArrowRight } from "./icons";
 import Logo from "./Logo";
 
 const COMPANY = [
-  "About us",
-  "Become a host",
-  "Concierge",
-  "Careers",
-  "Journal",
+  { label: "About us", href: "/#why" },
+  { label: "Experiences", href: "/experiences" },
+  { label: "Concierge", href: "/experiences" },
+  { label: "Careers", href: "/#why" },
+  { label: "Journal", href: "/journal" },
 ];
 
 export default function Footer() {
@@ -61,9 +61,12 @@ export default function Footer() {
             <h3 className="eyebrow text-sand-light">Company</h3>
             <ul className="mt-5 space-y-3 text-sm">
               {COMPANY.map((c) => (
-                <li key={c}>
-                  <Link href="/#why" className="transition-colors hover:text-terracotta">
-                    {c}
+                <li key={c.label}>
+                  <Link
+                    href={c.href}
+                    className="transition-colors hover:text-terracotta"
+                  >
+                    {c.label}
                   </Link>
                 </li>
               ))}
