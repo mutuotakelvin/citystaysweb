@@ -28,6 +28,7 @@ export type Villa = {
   reviews: number;
   image: string;
   gallery?: string[];
+  description?: string[];
 };
 
 export type Testimonial = {
@@ -144,9 +145,19 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 62400,
+    price: 15000,
     reviews: 128,
     image: "/photos/p05.jpg",
+    description: [
+      "3/5 BEDROOM BEACHFRONT VILLA",
+      "Galu, Diani, Kenya",
+      "Discover a serene coastal escape at this stunning beachfront villa in Diani, perfectly blending modern architecture with tropical tranquility.",
+      "The main house features 3 spacious ensuite bedrooms, each thoughtfully designed to provide ultimate comfort and privacy. Expansive glass doors invite natural light and open out to lush greenery and a breathtaking private pool area - ideal for relaxing or entertaining under the coastal sun.",
+      "A beautifully appointed open-plan living and dining area flows seamlessly onto the terrace, where gentle ocean breezes and the sound of the waves set a calming mood. The fully equipped kitchen complements the villa's contemporary design, making it both stylish and practical for family stays or group getaways.",
+      "Step outside to your private swimming pool, surrounded by manicured tropical gardens and inviting lounge spaces - perfect for sunbathing or evening cocktails by the water.",
+      "Adding to the property's charm is a 2-bedroom guest cottage, offering additional accommodation for family or guests. It maintains the same elegant aesthetic, providing comfort, privacy, and independence within the compound.",
+      "Just a few steps away lies the white sandy beach, where you can enjoy early morning walks, sunsets, or water activities in Diani's crystal-clear waters.",
+    ],
   },
   {
     slug: "tulia-courtyard-house",
@@ -158,7 +169,7 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 8,
-    price: 50700,
+    price: 12000,
     reviews: 74,
     image: "/photos/p19.jpg",
   },
@@ -172,7 +183,7 @@ export const VILLAS: Villa[] = [
     beds: 3,
     baths: 3,
     guests: 6,
-    price: 40300,
+    price: 8000,
     reviews: 56,
     image: "/photos/p16.jpg",
   },
@@ -186,7 +197,7 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 9,
-    price: 54600,
+    price: 12000,
     reviews: 91,
     image: "/photos/p21.jpg",
   },
@@ -200,7 +211,7 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 67600,
+    price: 12000,
     reviews: 43,
     image: "/photos/p01.jpg",
   },
@@ -214,7 +225,7 @@ export const VILLAS: Villa[] = [
     beds: 3,
     baths: 3,
     guests: 6,
-    price: 38350,
+    price: 7000,
     reviews: 67,
     image: "/photos/p03.jpg",
   },
@@ -228,7 +239,7 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 8,
-    price: 72800,
+    price: 10000,
     reviews: 20,
     image: "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM.jpeg",
     gallery: [
@@ -414,6 +425,8 @@ export function villaGallery(v: Villa): string[] {
 
 /** A two-paragraph description tailored to the villa. */
 export function villaDescription(v: Villa): string[] {
+  if (v.description) return v.description;
+
   const place = v.location;
   return [
     `Discover a serene coastal escape at this stunning home in ${place}, blending modern architecture with tropical tranquillity. Expansive glass doors invite natural light and open onto lush greenery and a breathtaking private pool. The open-plan living and dining area flows seamlessly onto the terrace, where breezes and birdsong set a calming mood.`,
