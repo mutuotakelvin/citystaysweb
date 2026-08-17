@@ -8,7 +8,7 @@ import DestinationMap from "../../components/DestinationMap";
 import { Filter } from "../../components/icons";
 import {
   DESTINATIONS,
-  VILLAS,
+  villasFor,
   getDestination,
   LISTING_FILTERS,
 } from "../../lib/data";
@@ -24,9 +24,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const dest = getDestination(slug);
-  if (!dest) return { title: "Stays — City Stays" };
+  if (!dest) return { title: "Stays — Lobelia Pearl" };
   return {
-    title: `Villas in ${dest.name}, Kenya — City Stays`,
+    title: `Villas in ${dest.name}, Kenya — Lobelia Pearl`,
     description: dest.blurb,
   };
 }
@@ -40,8 +40,7 @@ export default async function DestinationPage({
   const dest = getDestination(slug);
   if (!dest) notFound();
 
-  // The listing surfaces our full collection under the chosen destination.
-  const stays = VILLAS;
+  const stays = villasFor(dest.slug);
 
   return (
     <>

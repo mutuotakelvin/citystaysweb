@@ -44,7 +44,7 @@ export default function Header({
     >
       <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
         {/* Logo */}
-        <Link href="/" aria-label="City Stays home">
+        <Link href="/" aria-label="Lobelia Pearl home">
           <Logo
             tone={light ? "light" : "dark"}
             size={34}

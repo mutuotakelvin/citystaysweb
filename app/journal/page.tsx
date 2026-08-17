@@ -7,9 +7,9 @@ import { ARTICLES } from "../lib/data";
 import { ArrowRight } from "../components/icons";
 
 export const metadata: Metadata = {
-  title: "Journal — City Stays",
+  title: "Journal — Lobelia Pearl",
   description:
-    "Guides, stories and tips for travelling the Kenyan coast and highlands — from the City Stays team.",
+    "Guides, stories and tips for travelling the Kenyan coast and highlands — from the Lobelia Pearl team.",
 };
 
 export default function JournalPage() {

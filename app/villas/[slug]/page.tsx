@@ -37,7 +37,6 @@ import {
   Wifi,
   HomeIcon,
   Clock,
-  ArrowRight,
 } from "../../components/icons";
 
 export function generateStaticParams() {
@@ -51,9 +50,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const v = getVilla(slug);
-  if (!v) return { title: "Villa — City Stays" };
+  if (!v) return { title: "Villa — Lobelia Pearl" };
   return {
-    title: `${v.name}, ${v.location} — City Stays`,
+    title: `${v.name}, ${v.location} — Lobelia Pearl`,
     description: `${v.beds} bd · ${v.baths} ba · up to ${v.guests} guests in ${v.location}. From $${v.price}/night.`,
   };
 }
@@ -85,7 +84,7 @@ export default async function VillaPage({
   if (!villa) notFound();
 
   const dest = getDestination(villa.destination);
-  const host = VILLA_HOSTS[villa.slug] ?? "City Stays";
+  const host = VILLA_HOSTS[villa.slug] ?? "Lobelia Pearl";
   const gallery = villaGallery(villa);
   const description = villaDescription(villa);
 

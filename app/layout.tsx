@@ -25,7 +25,7 @@ const kaushan = Kaushan_Script({
 });
 
 export const metadata: Metadata = {
-  title: "City Stays — Extraordinary homes across Kenya",
+  title: "Lobelia Pearl — Extraordinary homes across Kenya",
   description:
     "Handpicked villas and homes along the Kenyan coast and beyond — verified hosts, effortless booking, and the kind of quiet luxury you remember for years.",
 };

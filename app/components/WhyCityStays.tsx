@@ -34,14 +34,14 @@ export default function WhyCityStays() {
       <div className="reveal mx-auto max-w-7xl rounded-[28px] bg-sand-light p-7 shadow-[0_30px_80px_-40px_rgba(38,37,33,0.3)] sm:p-12 lg:p-16">
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
           <div className="reveal">
-            <p className="eyebrow text-terracotta">Why City Stays</p>
+            <p className="eyebrow text-terracotta">Why Lobelia Pearl</p>
             <h2 className="mt-4 font-display text-[clamp(1.9rem,3.6vw,3rem)] font-medium leading-[1.08] text-ink-deep">
               A higher standard of stay — without the friction
             </h2>
             <p className="mt-6 max-w-md text-[1.02rem] leading-relaxed text-ink-soft">
               Every home is visited and verified by our team. Every booking is
               protected. Every guest gets a dedicated concierge. That&apos;s the
-              City Stays promise.
+              Lobelia Pearl promise.
             </p>
           </div>
 

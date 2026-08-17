@@ -7,7 +7,7 @@ import { EXPERIENCES } from "../lib/data";
 import { MapPin, Clock } from "../components/icons";
 
 export const metadata: Metadata = {
-  title: "Experiences — City Stays",
+  title: "Experiences — Lobelia Pearl",
   description:
     "Dhow cruises, private chefs, marine parks and highland rides — experiences our concierge arranges around your stay.",
 };

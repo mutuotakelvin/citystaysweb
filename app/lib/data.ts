@@ -1,4 +1,4 @@
-// Central content model for City Stays.
+// Central content model for Lobelia Pearl.
 // Real photography exists for Diani & Malindi; other locations reuse the
 // curated library as tasteful placeholders until their shoots land.
 
@@ -27,6 +27,7 @@ export type Villa = {
   price: number;
   reviews: number;
   image: string;
+  gallery?: string[];
 };
 
 export type Testimonial = {
@@ -50,7 +51,7 @@ export const DESTINATIONS: Destination[] = [
     slug: "diani",
     name: "Diani",
     region: "Coast",
-    villas: 24,
+    villas: 25,
     tagline: "Powder-white sand and warm Indian Ocean",
     blurb:
       "Kenya's most celebrated beach — barefoot luxury, coral reefs a short swim away, and villas tucked into coastal forest.",
@@ -217,6 +218,33 @@ export const VILLAS: Villa[] = [
     reviews: 67,
     image: "/photos/p03.jpg",
   },
+  {
+    slug: "the-pearl-house",
+    name: "The Pearl House",
+    destination: "diani",
+    location: "Galu, Diani",
+    badge: "New",
+    rating: 5,
+    beds: 4,
+    baths: 4,
+    guests: 8,
+    price: 560,
+    reviews: 0,
+    image: "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM.jpeg",
+    gallery: [
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM.jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM (1).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM (2).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM (3).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.19 PM.jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.19 PM (1).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.19 PM (2).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.19 PM (3).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.19 PM (4).jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.20 PM.jpeg",
+      "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.20 PM (1).jpeg",
+    ],
+  },
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -235,7 +263,7 @@ export const TESTIMONIALS: Testimonial[] = [
     stay: "Tulia Courtyard House",
     date: "Apr 2026",
     quote:
-      "City Stays' concierge arranged a private chef and a dhow trip. Everything was handled before we even landed.",
+      "Lobelia Pearl's concierge arranged a private chef and a dhow trip. Everything was handled before we even landed.",
     accent: "#c0613a",
   },
   {
@@ -258,6 +286,7 @@ export const VILLA_HOSTS: Record<string, string> = {
   "mwezi-garden-villa": "Zawadi",
   "pwani-white-house": "Imani",
   "kaya-lounge-house": "Baraka",
+  "the-pearl-house": "Lobelia",
 };
 
 export const VILLA_HIGHLIGHTS = [
@@ -343,7 +372,7 @@ export const getVilla = (slug: string) => VILLAS.find((v) => v.slug === slug);
 export function villaGallery(v: Villa): string[] {
   const dest = getDestination(v.destination);
   const extra = dest ? dest.gallery : [];
-  return [v.image, ...extra].slice(0, 5);
+  return (v.gallery ?? [v.image, ...extra]).slice(0, 5);
 }
 
 /** A two-paragraph description tailored to the villa. */
@@ -393,6 +422,11 @@ export const VILLA_INFO: Record<string, { summary: string; tags: string[] }> = {
     summary:
       "A laid-back beach house with open lounges, hammocks and direct sand access in Diani.",
     tags: ["Beachfront", "Beach access", "Lounge"],
+  },
+  "the-pearl-house": {
+    summary:
+      "A bright, design-led four-bedroom retreat with a private pool, tropical gardens, alfresco dining and a dedicated gym in Galu.",
+    tags: ["New", "Private pool", "Gym"],
   },
 };
 
@@ -507,8 +541,8 @@ export const ARTICLES: Article[] = [
   },
   {
     slug: "how-we-verify-homes",
-    title: "How we verify every City Stays home",
-    category: "Inside City Stays",
+    title: "How we verify every Lobelia Pearl home",
+    category: "Inside Lobelia Pearl",
     excerpt:
       "Every villa is visited in person before it's listed. A look at what our team checks — and why the photos always match.",
     image: "/photos/p05.jpg",

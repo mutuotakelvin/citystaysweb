@@ -52,7 +52,7 @@ export default function CtaBanner() {
         <div className="absolute inset-0 z-0">
           <Image
             src="/photos/p21.jpg"
-            alt="A City Stays villa courtyard"
+            alt="A Lobelia Pearl villa courtyard"
             fill
             sizes="100vw"
             className="cta-img scale-125 object-cover"

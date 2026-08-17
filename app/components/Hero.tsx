@@ -90,7 +90,7 @@ export default function Hero() {
           >
             <Image
               src={s.image}
-              alt={`A City Stays home in ${s.place}`}
+              alt={`A Lobelia Pearl home in ${s.place}`}
               fill
               priority={i === 0}
               sizes="100vw"

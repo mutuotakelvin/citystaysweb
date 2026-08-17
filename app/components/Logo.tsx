@@ -1,7 +1,7 @@
 import type { SVGProps } from "react";
 
 /**
- * City Stays logomark — a map pin framing a city skyline, recreated as vector
+ * Lobelia Pearl logomark — a map pin framing a coastal skyline, recreated as vector
  * from the brand artwork. Gold reads on both the dark hero and the sand UI.
  */
 export function LogoMark({
@@ -13,7 +13,7 @@ export function LogoMark({
       viewBox="0 0 40 48"
       className={className}
       role="img"
-      aria-label="City Stays"
+      aria-label="Lobelia Pearl"
       {...props}
     >
       <defs>
@@ -55,13 +55,13 @@ export default function Logo({ tone = "dark", className = "", size = 38 }: LogoP
       <LogoMark style={{ width: size, height: size }} className="shrink-0" />
       <span className="flex items-baseline leading-none">
         <span className="font-display text-[1.55em] font-semibold tracking-tight text-gold">
-          City
+          Lobelia
         </span>
         <span
           className={`-ml-0.5 font-script text-[1.5em] leading-none ${stays}`}
           style={{ fontFamily: "var(--font-script)" }}
         >
-          Stays
+          Pearl
         </span>
       </span>
     </span>

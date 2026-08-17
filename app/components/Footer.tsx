@@ -30,7 +30,7 @@ export default function Footer() {
                 <a
                   key={i}
                   href="#"
-                  aria-label="City Stays social profile"
+                  aria-label="Lobelia Pearl social profile"
                   className="grid h-10 w-10 place-items-center rounded-full border border-sand-light/20 text-sand-light/90 transition-colors hover:border-terracotta hover:bg-terracotta hover:text-white cursor-pointer"
                 >
                   <Icon className="h-4.5 w-4.5" />
@@ -104,7 +104,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-sand-light/15 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 City Stays. Galu, Diani, Kenya.</p>
+          <p>© 2026 Lobelia Pearl. Galu, Diani, Kenya.</p>
           <div className="flex gap-6">
             {["Privacy", "Terms", "Sitemap"].map((l) => (
               <a key={l} href="#" className="transition-colors hover:text-terracotta">
