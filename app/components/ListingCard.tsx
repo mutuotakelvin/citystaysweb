@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Villa } from "../lib/data";
-import { VILLA_INFO } from "../lib/data";
+import { VILLA_INFO, formatKES } from "../lib/data";
 import { Star } from "./icons";
 
 export default function ListingCard({ villa }: { villa: Villa }) {
@@ -63,7 +63,7 @@ export default function ListingCard({ villa }: { villa: Villa }) {
             {villa.beds} bd · {villa.baths} ba · up to {villa.guests} guests
           </span>
           <span className="text-ink-deep">
-            <span className="text-xl font-bold">${villa.price}</span>
+            <span className="text-xl font-bold">{formatKES(villa.price)}</span>
             <span className="text-sm text-ink-soft"> / night</span>
           </span>
         </div>

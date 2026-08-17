@@ -77,12 +77,6 @@ export default function CtaBanner() {
               Start your search
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <Link
-              href="/#cta"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10 cursor-pointer"
-            >
-              List your villa
-            </Link>
           </div>
         </div>
       </div>

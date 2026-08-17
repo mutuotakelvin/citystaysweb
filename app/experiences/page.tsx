@@ -3,7 +3,7 @@ import Image from "next/image";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Reveal from "../components/Reveal";
-import { EXPERIENCES } from "../lib/data";
+import { EXPERIENCES, formatKES } from "../lib/data";
 import { MapPin, Clock } from "../components/icons";
 
 export const metadata: Metadata = {
@@ -66,7 +66,7 @@ export default function ExperiencesPage() {
                       {x.duration}
                     </span>
                     <span className="font-semibold text-ink-deep">
-                      From ${x.from}
+                      From {formatKES(x.from)}
                     </span>
                   </div>
                 </div>

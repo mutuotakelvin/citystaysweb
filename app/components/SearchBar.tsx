@@ -1,15 +1,31 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useState } from "react";
+import { useRouter } from "next/navigation";
 import { DESTINATIONS } from "../lib/data";
 import { Search, MapPin, Calendar, Users } from "./icons";
 
 export default function SearchBar({ className = "" }: { className?: string }) {
   const id = useId();
+  const router = useRouter();
+  const [where, setWhere] = useState("Diani, Kenya");
+  const [checkIn, setCheckIn] = useState("2026-07-12");
+  const [checkOut, setCheckOut] = useState("2026-07-17");
+  const [guests, setGuests] = useState("2");
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const destination = DESTINATIONS.find(
+      (item) => `${item.name}, Kenya`.toLowerCase() === where.trim().toLowerCase(),
+    ) ?? DESTINATIONS.find((item) => item.name.toLowerCase() === where.trim().toLowerCase());
+    const slug = destination?.slug ?? "diani";
+    const params = new URLSearchParams({ checkIn, checkOut, guests });
+    router.push(`/destinations/${slug}?${params.toString()}`);
+  }
 
   return (
     <form
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={submit}
       className={`w-full rounded-[26px] bg-white/95 p-2 shadow-[0_24px_60px_-24px_rgba(38,37,33,0.45)] ring-1 ring-ink/5 backdrop-blur ${className}`}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_0.9fr_auto] lg:items-stretch">
@@ -22,7 +38,8 @@ export default function SearchBar({ className = "" }: { className?: string }) {
           <input
             id={`${id}-where`}
             list={`${id}-dests`}
-            defaultValue="Diani, Kenya"
+            value={where}
+            onChange={(e) => setWhere(e.target.value)}
             placeholder="Search destinations"
             className="w-full bg-transparent text-[15px] font-semibold text-ink-deep outline-none placeholder:font-normal placeholder:text-ink-soft"
           />
@@ -42,7 +59,8 @@ export default function SearchBar({ className = "" }: { className?: string }) {
           <input
             id={`${id}-in`}
             type="date"
-            defaultValue="2026-07-12"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
             className="w-full bg-transparent text-[15px] font-semibold text-ink-deep outline-none"
           />
         </Field>
@@ -56,7 +74,9 @@ export default function SearchBar({ className = "" }: { className?: string }) {
           <input
             id={`${id}-out`}
             type="date"
-            defaultValue="2026-07-17"
+            value={checkOut}
+            min={checkIn}
+            onChange={(e) => setCheckOut(e.target.value)}
             className="w-full bg-transparent text-[15px] font-semibold text-ink-deep outline-none"
           />
         </Field>
@@ -70,7 +90,8 @@ export default function SearchBar({ className = "" }: { className?: string }) {
         >
           <select
             id={`${id}-guests`}
-            defaultValue="2"
+            value={guests}
+            onChange={(e) => setGuests(e.target.value)}
             className="w-full cursor-pointer appearance-none bg-transparent text-[15px] font-semibold text-ink-deep outline-none"
           >
             {[1, 2, 3, 4, 5, 6, 8, 10].map((n) => (

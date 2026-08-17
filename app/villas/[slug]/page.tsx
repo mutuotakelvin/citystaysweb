@@ -6,11 +6,10 @@ import Footer from "../../components/Footer";
 import Reveal from "../../components/Reveal";
 import Gallery from "../../components/villa/Gallery";
 import BookingCard from "../../components/villa/BookingCard";
-import AvailabilityCalendar from "../../components/villa/AvailabilityCalendar";
+import ReviewMarquee from "../../components/ReviewMarquee";
 import {
   VILLAS,
   getVilla,
-  getDestination,
   villaGallery,
   villaDescription,
   VILLA_HOSTS,
@@ -18,8 +17,8 @@ import {
   VILLA_AMENITIES,
   TOTAL_AMENITIES,
   RATING_BARS,
-  VILLA_REVIEWS,
-  DEFAULT_NIGHTS,
+  getVillaReviews,
+  formatKES,
 } from "../../lib/data";
 import {
   Star,
@@ -53,7 +52,7 @@ export async function generateMetadata({
   if (!v) return { title: "Villa — Lobelia Pearl" };
   return {
     title: `${v.name}, ${v.location} — Lobelia Pearl`,
-    description: `${v.beds} bd · ${v.baths} ba · up to ${v.guests} guests in ${v.location}. From $${v.price}/night.`,
+    description: `${v.beds} bd · ${v.baths} ba · up to ${v.guests} guests in ${v.location}. From ${formatKES(v.price)}/night.`,
   };
 }
 
@@ -83,10 +82,10 @@ export default async function VillaPage({
   const villa = getVilla(slug);
   if (!villa) notFound();
 
-  const dest = getDestination(villa.destination);
   const host = VILLA_HOSTS[villa.slug] ?? "Lobelia Pearl";
   const gallery = villaGallery(villa);
   const description = villaDescription(villa);
+  const reviews = getVillaReviews(villa.slug);
 
   return (
     <>
@@ -118,7 +117,7 @@ export default async function VillaPage({
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
                 <span className="flex items-center gap-1.5 font-semibold text-ink-deep">
                   <Star className="h-4 w-4 text-gold" />
-                  {villa.rating} · {villa.reviews} reviews
+                  {villa.rating} · {reviews.length} reviews
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-teal-soft">
                   <ShieldCheck className="h-4 w-4" />
@@ -209,19 +208,6 @@ export default async function VillaPage({
                 </button>
               </Reveal>
 
-              {/* Availability */}
-              <Reveal as="div" className="mt-10 border-t border-sand-line pt-8">
-                <h2 className="reveal font-display text-[clamp(1.5rem,3vw,2rem)] font-medium text-ink-deep">
-                  Availability
-                </h2>
-                <p className="reveal mt-1 text-ink-soft">
-                  {DEFAULT_NIGHTS} nights · Jul 12 – Jul 17
-                </p>
-                <div className="reveal mt-6">
-                  <AvailabilityCalendar />
-                </div>
-              </Reveal>
-
               {/* Map */}
               <Reveal as="div" className="mt-10 border-t border-sand-line pt-8">
                 <h2 className="reveal font-display text-[clamp(1.5rem,3vw,2rem)] font-medium text-ink-deep">
@@ -229,14 +215,14 @@ export default async function VillaPage({
                 </h2>
                 <p className="reveal mt-1 text-ink-soft">{villa.location}</p>
                 <div className="reveal relative mt-6 h-[320px] overflow-hidden rounded-3xl bg-teal-mist">
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(22,58,65,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(22,58,65,0.10)_1px,transparent_1px)] bg-[size:38px_38px]" />
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <span className="grid h-12 w-12 place-items-center rounded-full bg-terracotta/25">
-                      <span className="h-5 w-5 rounded-full border-2 border-white bg-terracotta" />
-                    </span>
-                  </div>
+                  <iframe
+                    title={`${villa.name} location map`}
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=39.12%2C-4.35%2C39.32%2C-4.22&layer=mapnik&marker=-4.28%2C39.25"
+                    className="absolute inset-0 h-full w-full border-0"
+                    loading="lazy"
+                  />
                   <span className="absolute bottom-5 left-5 font-display text-xl italic text-teal">
-                    {dest?.name === villa.location ? villa.location : `${dest?.name ?? ""} Beach`}
+                    {villa.location}
                   </span>
                 </div>
               </Reveal>
@@ -265,30 +251,7 @@ export default async function VillaPage({
                   ))}
                 </div>
 
-                <div className="mt-10 grid gap-x-12 gap-y-9 sm:grid-cols-2">
-                  {VILLA_REVIEWS.map((rev) => (
-                    <figure key={rev.name} className="reveal">
-                      <figcaption className="flex items-center gap-3">
-                        <span
-                          className="grid h-10 w-10 place-items-center rounded-full text-sm font-semibold text-white"
-                          style={{ backgroundColor: rev.accent }}
-                          aria-hidden
-                        >
-                          {rev.initial}
-                        </span>
-                        <span className="text-sm">
-                          <span className="block font-bold text-ink-deep">
-                            {rev.name}
-                          </span>
-                          <span className="block text-ink-soft">{rev.date}</span>
-                        </span>
-                      </figcaption>
-                      <blockquote className="mt-3 leading-relaxed text-ink/90">
-                        {rev.quote}
-                      </blockquote>
-                    </figure>
-                  ))}
-                </div>
+                <ReviewMarquee reviews={reviews} />
               </Reveal>
             </div>
 

@@ -5,19 +5,24 @@ import type { Villa } from "../../lib/data";
 import {
   CLEANING_FEE,
   SERVICE_RATE,
+  EXTRA_GUEST_FEE,
   DEFAULT_NIGHTS,
+  formatKES,
 } from "../../lib/data";
 import { Star, Minus, Plus, Lock } from "../icons";
-
-const money = (n: number) => `$${n.toLocaleString("en-US")}`;
+import AvailabilityCalendar from "./AvailabilityCalendar";
 
 export default function BookingCard({ villa }: { villa: Villa }) {
   const [guests, setGuests] = useState(Math.min(6, villa.guests));
-
-  const nights = DEFAULT_NIGHTS;
+  const [nights, setNights] = useState(DEFAULT_NIGHTS);
+  const [checkIn, setCheckIn] = useState(new Date(2026, 6, 12));
+  const [checkOut, setCheckOut] = useState(new Date(2026, 6, 17));
+  const extraGuests = Math.max(0, guests - 2);
+  const guestFee = extraGuests * EXTRA_GUEST_FEE * nights;
   const subtotal = villa.price * nights;
-  const service = Math.round(subtotal * SERVICE_RATE);
-  const total = subtotal + CLEANING_FEE + service;
+  const service = Math.round((subtotal + guestFee) * SERVICE_RATE);
+  const total = subtotal + guestFee + CLEANING_FEE + service;
+  const dateLabel = (date: Date) => date.toLocaleDateString("en-KE", { month: "short", day: "numeric" });
 
   return (
     <div>
@@ -25,7 +30,7 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         {/* Price + rating */}
         <div className="flex items-baseline justify-between">
           <p className="text-ink-deep">
-            <span className="text-[1.7rem] font-bold">{money(villa.price)}</span>
+            <span className="text-[1.7rem] font-bold">{formatKES(villa.price)}</span>
             <span className="text-ink-soft"> / night</span>
           </p>
           <span className="flex items-center gap-1 text-sm font-semibold text-ink-deep">
@@ -40,13 +45,13 @@ export default function BookingCard({ villa }: { villa: Villa }) {
             <div className="border-r border-sand-line px-4 py-3">
               <p className="eyebrow text-[0.6rem] text-ink-soft">Check-in</p>
               <p className="mt-1 text-[15px] font-semibold text-ink-deep">
-                Jul 12
+                {dateLabel(checkIn)}
               </p>
             </div>
             <div className="px-4 py-3">
               <p className="eyebrow text-[0.6rem] text-ink-soft">Check-out</p>
               <p className="mt-1 text-[15px] font-semibold text-ink-deep">
-                Jul 17
+                {dateLabel(checkOut)}
               </p>
             </div>
           </div>
@@ -76,6 +81,20 @@ export default function BookingCard({ villa }: { villa: Villa }) {
           </div>
         </div>
 
+        <div className="mt-5 border-t border-sand-line pt-5">
+          <div className="mb-4 flex items-baseline justify-between">
+            <h3 className="font-display text-xl font-semibold text-ink-deep">Choose your dates</h3>
+            <span className="text-sm text-ink-soft">{nights} nights</span>
+          </div>
+          <AvailabilityCalendar
+            onRangeChange={({ start, end, nights: selectedNights }) => {
+              setCheckIn(start);
+              setCheckOut(end);
+              setNights(selectedNights);
+            }}
+          />
+        </div>
+
         <button
           type="button"
           className="mt-4 w-full rounded-full bg-terracotta py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-terracotta/25 transition-colors hover:bg-terracotta-dark cursor-pointer"
@@ -89,15 +108,21 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         {/* Breakdown */}
         <dl className="mt-5 space-y-3 text-[15px] text-ink">
           <Row
-            label={`${money(villa.price)} × ${nights} nights`}
-            value={money(subtotal)}
+            label={`${formatKES(villa.price)} × ${nights} nights`}
+            value={formatKES(subtotal)}
           />
-          <Row label="Cleaning fee" value={money(CLEANING_FEE)} />
-          <Row label="Service fee" value={money(service)} />
+          {extraGuests > 0 && (
+            <Row
+              label={`${extraGuests} extra guest${extraGuests === 1 ? "" : "s"}`}
+              value={formatKES(guestFee)}
+            />
+          )}
+          <Row label="Cleaning fee" value={formatKES(CLEANING_FEE)} />
+          <Row label="Service fee" value={formatKES(service)} />
         </dl>
         <div className="mt-5 flex items-center justify-between border-t border-sand-line pt-5 text-ink-deep">
           <span className="text-lg font-bold">Total</span>
-          <span className="text-lg font-bold">{money(total)}</span>
+          <span className="text-lg font-bold">{formatKES(total)}</span>
         </div>
       </div>
 

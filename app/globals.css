@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@keyframes review-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-33.333%); }
+}
+
+.review-column-track {
+  animation: review-scroll linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-column-track { animation-play-state: paused; }
+}
+
 @theme {
   /* Brand palette — sourced from the Lobelia Pearl design */
   --color-terracotta: #c0613a;

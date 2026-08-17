@@ -144,7 +144,7 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 480,
+    price: 62400,
     reviews: 128,
     image: "/photos/p05.jpg",
   },
@@ -158,7 +158,7 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 8,
-    price: 390,
+    price: 50700,
     reviews: 74,
     image: "/photos/p19.jpg",
   },
@@ -172,7 +172,7 @@ export const VILLAS: Villa[] = [
     beds: 3,
     baths: 3,
     guests: 6,
-    price: 310,
+    price: 40300,
     reviews: 56,
     image: "/photos/p16.jpg",
   },
@@ -186,7 +186,7 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 9,
-    price: 420,
+    price: 54600,
     reviews: 91,
     image: "/photos/p21.jpg",
   },
@@ -200,7 +200,7 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 520,
+    price: 67600,
     reviews: 43,
     image: "/photos/p01.jpg",
   },
@@ -214,7 +214,7 @@ export const VILLAS: Villa[] = [
     beds: 3,
     baths: 3,
     guests: 6,
-    price: 295,
+    price: 38350,
     reviews: 67,
     image: "/photos/p03.jpg",
   },
@@ -228,8 +228,8 @@ export const VILLAS: Villa[] = [
     beds: 4,
     baths: 4,
     guests: 8,
-    price: 560,
-    reviews: 0,
+    price: 72800,
+    reviews: 20,
     image: "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM.jpeg",
     gallery: [
       "/photos/diani/WhatsApp Image 2026-08-16 at 2.09.18 PM.jpeg",
@@ -327,7 +327,15 @@ export const RATING_BARS = [
   { label: "Value", score: 4.7 },
 ] as const;
 
-export const VILLA_REVIEWS = [
+export type VillaReview = {
+  initial: string;
+  name: string;
+  date: string;
+  accent: string;
+  quote: string;
+};
+
+export const VILLA_REVIEWS: VillaReview[] = [
   {
     initial: "S",
     name: "Sofia M.",
@@ -360,11 +368,40 @@ export const VILLA_REVIEWS = [
     quote:
       "Best villa we've stayed in on the coast. The kitchen is a dream and the housekeeping team were lovely.",
   },
-] as const;
+];
 
-export const CLEANING_FEE = 85;
+export const PEARL_HOUSE_REVIEWS: VillaReview[] = [
+  { initial: "A", name: "Amara N.", date: "June 2026", accent: "#2c8b83", quote: "The house is even more beautiful in person. Every room opens to light, greenery and the most peaceful pool." },
+  { initial: "M", name: "Michael T.", date: "June 2026", accent: "#c0613a", quote: "The dining space was made for long lunches. Our group of eight had plenty of room and the kitchen was exceptionally well equipped." },
+  { initial: "N", name: "Nadia R.", date: "May 2026", accent: "#a6864e", quote: "A calm, beautifully designed base for Diani. The gardens are lush, the beds are comfortable and the team were wonderful." },
+  { initial: "K", name: "Khalid S.", date: "May 2026", accent: "#163a41", quote: "We loved having breakfast by the pool and a proper gym for morning workouts. It feels private without being isolated." },
+  { initial: "E", name: "Elena P.", date: "May 2026", accent: "#7b5ea7", quote: "The details make this place special: woven lights, huge windows, thoughtful service and a pool we barely left." },
+  { initial: "J", name: "James W.", date: "April 2026", accent: "#2c8b83", quote: "Check-in was seamless and the concierge arranged a chef for our first night. The food and the setting were unforgettable." },
+  { initial: "F", name: "Fatima A.", date: "April 2026", accent: "#c0613a", quote: "Our family had space to spread out while still gathering around one beautiful table. We would happily return." },
+  { initial: "R", name: "Ruth K.", date: "April 2026", accent: "#a6864e", quote: "The photos are accurate, but they do not capture how peaceful the house feels in the early morning." },
+  { initial: "D", name: "David L.", date: "March 2026", accent: "#163a41", quote: "Excellent for a group trip. The living areas are generous, the bathrooms are spotless and the pool is fantastic." },
+  { initial: "S", name: "Sana M.", date: "March 2026", accent: "#7b5ea7", quote: "A very polished stay from start to finish. We appreciated the quick communication and the little welcome touches." },
+  { initial: "T", name: "Tom B.", date: "March 2026", accent: "#2c8b83", quote: "The gym was a real surprise and the glass walls make the whole home feel connected to the tropical garden." },
+  { initial: "L", name: "Lydia O.", date: "February 2026", accent: "#c0613a", quote: "We came for a quiet beach break and found a home that made staying in just as appealing as going out." },
+  { initial: "P", name: "Peter G.", date: "February 2026", accent: "#a6864e", quote: "Beautiful architecture, brilliant housekeeping and a very comfortable week for our family." },
+  { initial: "Y", name: "Yara H.", date: "February 2026", accent: "#163a41", quote: "The outdoor spaces are so well planned. We moved between the pool, dining table and shaded lounge all day." },
+  { initial: "C", name: "Clara V.", date: "January 2026", accent: "#7b5ea7", quote: "A restful and stylish retreat with everything we needed. The house was immaculate when we arrived." },
+  { initial: "B", name: "Brian E.", date: "January 2026", accent: "#2c8b83", quote: "The perfect place for celebrating together. The team helped arrange transport and made the whole stay effortless." },
+  { initial: "I", name: "Irene Z.", date: "January 2026", accent: "#c0613a", quote: "The pool is gorgeous at sunset and the house stays wonderfully cool during the day. We slept so well." },
+  { initial: "O", name: "Owen C.", date: "December 2025", accent: "#a6864e", quote: "Modern, welcoming and surrounded by palms. The Pearl House gave our friends trip a real sense of occasion." },
+  { initial: "W", name: "Wanjiku N.", date: "December 2025", accent: "#163a41", quote: "Everything felt considered, from the lighting to the servingware. A genuinely memorable Diani stay." },
+  { initial: "Z", name: "Zainab F.", date: "December 2025", accent: "#7b5ea7", quote: "We loved the balance of privacy and service. It is a beautiful home for slow days by the coast." },
+];
+
+export const getVillaReviews = (slug: string): VillaReview[] =>
+  slug === "the-pearl-house" ? PEARL_HOUSE_REVIEWS : VILLA_REVIEWS;
+
+export const CLEANING_FEE = 11050;
+export const EXTRA_GUEST_FEE = 1500;
 export const SERVICE_RATE = 0.12; // of the nightly subtotal
 export const DEFAULT_NIGHTS = 5;
+
+export const formatKES = (n: number) => `KES ${n.toLocaleString("en-KE")}`;
 
 export const getVilla = (slug: string) => VILLAS.find((v) => v.slug === slug);
 
@@ -457,7 +494,7 @@ export const EXPERIENCES: Experience[] = [
       "Glide along the reef on a hand-built dhow as the sky turns gold, sundowners in hand.",
     image: "/photos/p03.jpg",
     duration: "3 hours",
-    from: 70,
+    from: 9100,
   },
   {
     title: "Private chef & Swahili feast",
@@ -466,7 +503,7 @@ export const EXPERIENCES: Experience[] = [
       "A coastal tasting menu — swahili spices, fresh seafood — cooked in your own kitchen.",
     image: "/photos/p06.jpg",
     duration: "Evening",
-    from: 120,
+    from: 15600,
   },
   {
     title: "Kisite marine snorkelling",
@@ -475,7 +512,7 @@ export const EXPERIENCES: Experience[] = [
       "Snorkel coral gardens and spot dolphins in a protected marine park off the south coast.",
     image: "/photos/p16.jpg",
     duration: "Full day",
-    from: 95,
+    from: 12350,
   },
   {
     title: "Mount Kenya foothills ride",
@@ -484,7 +521,7 @@ export const EXPERIENCES: Experience[] = [
       "Ride horseback across the plains with the snow-capped mountain on the horizon.",
     image: "/photos/p21.jpg",
     duration: "Half day",
-    from: 110,
+    from: 14300,
   },
   {
     title: "Crater lake & Hell's Gate",
@@ -493,7 +530,7 @@ export const EXPERIENCES: Experience[] = [
       "Cycle past zebra and giraffe beneath dramatic volcanic cliffs in the Rift Valley.",
     image: "/photos/p19.jpg",
     duration: "Full day",
-    from: 85,
+    from: 11050,
   },
   {
     title: "Old town heritage walk",
@@ -502,7 +539,7 @@ export const EXPERIENCES: Experience[] = [
       "Swahili history, spice markets and centuries-old dhow builders with a local guide.",
     image: "/photos/p05.jpg",
     duration: "2 hours",
-    from: 40,
+    from: 5200,
   },
 ];
 

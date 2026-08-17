@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Villa } from "../lib/data";
+import { formatKES } from "../lib/data";
 import { Heart, Star, MapPin } from "./icons";
 
 export default function VillaCard({
@@ -70,7 +71,7 @@ export default function VillaCard({
 
         <div className="mt-4 flex items-end justify-between border-t border-sand-line pt-4">
           <p className="text-ink-deep">
-            <span className="text-xl font-bold">${villa.price}</span>
+            <span className="text-xl font-bold">{formatKES(villa.price)}</span>
             <span className="text-sm text-ink-soft"> / night</span>
           </p>
           <span className="text-sm font-medium text-terracotta">

@@ -2,15 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import Reveal from "../../components/Reveal";
-import ListingCard from "../../components/ListingCard";
-import DestinationMap from "../../components/DestinationMap";
-import { Filter } from "../../components/icons";
+import DestinationResults from "../../components/DestinationResults";
 import {
   DESTINATIONS,
   villasFor,
   getDestination,
-  LISTING_FILTERS,
 } from "../../lib/data";
 
 export function generateStaticParams() {
@@ -21,6 +17,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ guests?: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
   const dest = getDestination(slug);
@@ -33,13 +30,16 @@ export async function generateMetadata({
 
 export default async function DestinationPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ guests?: string }>;
 }) {
   const { slug } = await params;
   const dest = getDestination(slug);
   if (!dest) notFound();
-
+  const search = searchParams ? await searchParams : {};
+  const guests = Number(search.guests) || undefined;
   const stays = villasFor(dest.slug);
 
   return (
@@ -53,55 +53,11 @@ export default async function DestinationPage({
               Villas in {dest.name}, Kenya
             </h1>
             <p className="text-ink-soft">
-              {stays.length} stays · Jul 12 – 17 · 2 guests
+              {stays.length} stays · Jul 12 – 17{guests ? ` · ${guests} guests` : " · 2 guests"}
             </p>
           </div>
 
-          {/* Filters + view toggle */}
-          <div className="mt-6 flex items-center justify-between gap-4">
-            <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <button
-                type="button"
-                className="flex shrink-0 items-center gap-2 rounded-full border border-ink/15 bg-sand-light px-4 py-2 text-sm font-semibold text-ink-deep transition-colors hover:border-ink/30 cursor-pointer"
-              >
-                <Filter className="h-4 w-4" />
-                Filters
-              </button>
-              {LISTING_FILTERS.map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  className="shrink-0 rounded-full border border-ink/15 bg-sand-light px-4 py-2 text-sm font-medium text-ink-deep transition-colors hover:border-terracotta hover:text-terracotta cursor-pointer"
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-
-            <div className="hidden shrink-0 rounded-full border border-ink/12 bg-sand-light p-1 sm:flex">
-              <span className="rounded-full bg-ink-deep px-4 py-1.5 text-sm font-semibold text-sand-light">
-                List
-              </span>
-              <span className="px-4 py-1.5 text-sm font-medium text-ink-soft">
-                Map
-              </span>
-            </div>
-          </div>
-
-          {/* Split: list + map */}
-          <div className="mt-8 grid gap-8 lg:grid-cols-2 lg:gap-10">
-            <Reveal as="div" className="flex flex-col gap-5" stagger={0.07}>
-              {stays.map((v) => (
-                <ListingCard key={v.slug} villa={v} />
-              ))}
-            </Reveal>
-
-            <aside className="hidden lg:block">
-              <div className="sticky top-24 h-[calc(100vh-7.5rem)]">
-                <DestinationMap villas={stays} />
-              </div>
-            </aside>
-          </div>
+          <DestinationResults villas={stays} guests={guests} location={dest.name} />
         </div>
       </main>
       <Footer />
