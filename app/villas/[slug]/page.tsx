@@ -7,6 +7,7 @@ import Reveal from "../../components/Reveal";
 import Gallery from "../../components/villa/Gallery";
 import BookingCard from "../../components/villa/BookingCard";
 import ReviewMarquee from "../../components/ReviewMarquee";
+import SaveButton from "../../components/villa/SaveButton";
 import {
   VILLAS,
   getVilla,
@@ -24,8 +25,6 @@ import {
   Star,
   ShieldCheck,
   MapPin,
-  Share,
-  Heart,
   Waves,
   Snowflake,
   ChefHat,
@@ -130,8 +129,7 @@ export default async function VillaPage({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <ActionButton icon={<Share className="h-4 w-4" />} label="Share" />
-              <ActionButton icon={<Heart className="h-4 w-4" />} label="Save" />
+              <SaveButton slug={villa.slug} />
             </div>
           </div>
 
@@ -264,23 +262,5 @@ export default async function VillaPage({
       </main>
       <Footer />
     </>
-  );
-}
-
-function ActionButton({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-ink-deep underline-offset-4 transition-colors hover:bg-sand-deep hover:underline cursor-pointer"
-    >
-      {icon}
-      {label}
-    </button>
   );
 }
