@@ -53,7 +53,9 @@ export default async function DestinationPage({
               Villas in {dest.name}, Kenya
             </h1>
             <p className="text-ink-soft">
-              {stays.length} stays · Jul 12 – 17{guests ? ` · ${guests} guests` : " · 2 guests"}
+              {stays.length
+                ? `${stays.length} stays · Jul 12 – 17${guests ? ` · ${guests} guests` : " · 2 guests"}`
+                : "Currently being curated for your next escape"}
             </p>
           </div>
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "./Reveal";
-import { DESTINATIONS } from "../lib/data";
+import { DESTINATIONS, villasFor } from "../lib/data";
 
 export default function Destinations() {
   return (
@@ -40,7 +40,11 @@ export default function Destinations() {
                 <h3 className="font-display text-2xl font-medium leading-none text-white sm:text-3xl">
                   {d.name}
                 </h3>
-                <p className="mt-1.5 text-sm text-white/80">{d.villas} villas</p>
+                <p className="mt-1.5 text-sm text-white/80">
+                  {villasFor(d.slug).length
+                    ? `${villasFor(d.slug).length} villas`
+                    : "Coming soon"}
+                </p>
               </div>
             </Link>
           ))}

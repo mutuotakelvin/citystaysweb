@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import type { Villa } from "../lib/data";
 import { VILLA_INFO } from "../lib/data";
 import ListingCard from "./ListingCard";
@@ -33,6 +34,27 @@ export default function DestinationResults({
     if (filter === "Price") next = [...next].sort((a, b) => a.price - b.price);
     return next;
   }, [filter, guests, villas]);
+
+  if (!villas.length) {
+    return (
+      <div className="mt-10 overflow-hidden rounded-[2rem] bg-teal px-7 py-12 text-sand-light sm:px-12 sm:py-16">
+        <p className="eyebrow text-terracotta-soft">A new chapter is taking shape</p>
+        <h2 className="mt-4 max-w-lg font-display text-[clamp(2rem,4vw,3.2rem)] font-medium leading-tight">
+          We&apos;re curating beautiful homes in {location}.
+        </h2>
+        <p className="mt-5 max-w-xl leading-relaxed text-sand-light/75">
+          There are no stays available here just yet, but our local team is working
+          on it. In the meantime, discover one of our handpicked homes on the coast.
+        </p>
+        <Link
+          href="/destinations/diani"
+          className="mt-8 inline-flex rounded-full bg-terracotta px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-terracotta-dark"
+        >
+          Explore Diani stays
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <>
