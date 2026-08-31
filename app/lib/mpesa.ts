@@ -33,6 +33,7 @@ type MpesaConfig = {
   shortcode: string;
   passkey: string;
   callbackUrl: string;
+  transactionType: "CustomerPayBillOnline" | "CustomerBuyGoodsOnline";
 };
 
 type Clock = () => Date;
@@ -51,8 +52,10 @@ function getConfig(): MpesaConfig {
   for (const [name, value] of Object.entries(values)) {
     if (!value) throw new Error(`Missing ${name.replace(/[A-Z]/g, (letter) => `_${letter}`).toUpperCase()}`);
   }
+  const rawType = process.env.MPESA_TRANSACTION_TYPE || "CustomerPayBillOnline";
+  if (rawType !== "CustomerPayBillOnline" && rawType !== "CustomerBuyGoodsOnline") throw new Error("MPESA_TRANSACTION_TYPE must be CustomerPayBillOnline or CustomerBuyGoodsOnline");
 
-  return { environment, ...values } as MpesaConfig;
+  return { environment, ...values, transactionType: rawType } as MpesaConfig;
 }
 
 function getBaseUrl(): string {
@@ -73,8 +76,17 @@ function formatTimestamp(date: Date): string {
 }
 
 async function readJson(response: Response): Promise<Record<string, unknown>> {
-  const body = await response.json() as Record<string, unknown>;
-  if (!response.ok) throw new Error("M-Pesa request failed");
+  const text = await response.text();
+  let body: Record<string, unknown>;
+  try {
+    body = text ? (JSON.parse(text) as Record<string, unknown>) : {};
+  } catch {
+    throw new Error(`M-Pesa request failed ${response.status}: ${text.slice(0, 500)}`);
+  }
+  if (!response.ok) {
+    const detail = (body.error_description as string) || (body.errorMessage as string) || (body.error as string) || text.slice(0, 500);
+    throw new Error(`M-Pesa request failed ${response.status}: ${detail}`);
+  }
   return body;
 }
 
@@ -111,7 +123,7 @@ export async function initiateStkPush(
       BusinessShortCode: config.shortcode,
       Password: Buffer.from(`${config.shortcode}${config.passkey}${timestamp}`).toString("base64"),
       Timestamp: timestamp,
-      TransactionType: "CustomerPayBillOnline",
+      TransactionType: config.transactionType,
       Amount: amount,
       PartyA: phone,
       PartyB: config.shortcode,
