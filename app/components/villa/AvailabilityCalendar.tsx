@@ -8,14 +8,24 @@ const BOOKED_BY_MONTH: Record<string, number[]> = {
   "2026-7": [4, 5, 18, 19, 27],
 };
 
+function initialCalendarState() {
+  const today = new Date();
+  const month = new Date(today.getFullYear(), today.getMonth(), 1);
+  const start = today.getDate() + 1;
+  const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const end = start + 1 <= days ? start + 1 : 0;
+  return { month, start, end };
+}
+
 export default function AvailabilityCalendar({
   onRangeChange,
 }: {
   onRangeChange?: (range: { start: Date; end: Date; nights: number }) => void;
 }) {
-  const [month, setMonth] = useState(new Date(2026, 6, 1));
-  const [start, setStart] = useState(12);
-  const [end, setEnd] = useState(17);
+  const initial = initialCalendarState();
+  const [month, setMonth] = useState(initial.month);
+  const [start, setStart] = useState(initial.start);
+  const [end, setEnd] = useState(initial.end);
 
   const year = month.getFullYear();
   const monthIndex = month.getMonth();

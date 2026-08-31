@@ -1,5 +1,46 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Lipa na M-Pesa Sandbox Setup
+
+This implementation is sandbox-only. Copy `.env.example` to `.env.local` and populate it with values from your Neon project and Safaricom Daraja sandbox application. Do not commit `.env.local` or any credentials.
+
+### Neon
+
+Neon supplies both database connection values. Set `DATABASE_URL` to the pooled Neon connection for application queries and `DATABASE_URL_UNPOOLED` to the direct, unpooled connection for Prisma commands where required. Both values belong in `.env.local`:
+
+```bash
+node --env-file=.env.local node_modules/prisma/build/index.js migrate status
+```
+
+### Daraja
+
+Create a Daraja sandbox application and set `MPESA_ENVIRONMENT=sandbox`, then add its consumer key, consumer secret, shortcode, and passkey to `.env.local`. `MPESA_CALLBACK_URL` must be a public HTTPS URL pointing to the payment callback route. Never put real credentials in `.env.example`, documentation, or source control.
+
+### Local Callback Testing
+
+Start the app locally:
+
+```bash
+npm run dev
+```
+
+Expose `/api/mpesa/callback` through a public HTTPS tunnel using ngrok or Cloudflare Tunnel. For example:
+
+```bash
+ngrok http 3000
+# or
+cloudflared tunnel --url http://localhost:3000
+```
+
+Set `MPESA_CALLBACK_URL` in `.env.local` to the tunnel's HTTPS URL plus `/api/mpesa/callback`, restart the development server, and submit a reservation with Daraja sandbox credentials. Complete or cancel the STK prompt, then verify that the reservation status changes only after the callback is received.
+
+Run the database checks locally with:
+
+```bash
+node --env-file=.env.local node_modules/prisma/build/index.js migrate status
+node --env-file=.env.local -e "const { neon } = require('@neondatabase/serverless'); const sql = neon(process.env.DATABASE_URL); sql\`SELECT 1 AS ok\`.then(console.log).catch((error) => { console.error(error); process.exit(1); });"
+```
+
 ## Getting Started
 
 First, run the development server:

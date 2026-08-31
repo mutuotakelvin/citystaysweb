@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import type { Villa } from "../../lib/data";
 import {
   CLEANING_FEE,
@@ -11,21 +11,129 @@ import {
 } from "../../lib/data";
 import { Star, Minus, Plus, Lock } from "../icons";
 import AvailabilityCalendar from "./AvailabilityCalendar";
+import { pollBookingStatus, type BookingStatus } from "../../lib/booking-status";
+
+type CheckoutState = "idle" | "submitting" | "pending" | "success" | "failure" | "expired";
+type BookingResponse = { reference?: string; status: BookingStatus; amount?: number; message?: string };
+
+function defaultBookingDates(): { checkIn: Date; checkOut: Date } {
+  const checkIn = new Date();
+  checkIn.setHours(0, 0, 0, 0);
+  checkIn.setDate(checkIn.getDate() + 1);
+  const checkOut = new Date(checkIn);
+  checkOut.setDate(checkOut.getDate() + DEFAULT_NIGHTS);
+  return { checkIn, checkOut };
+}
+
+export function guardBookingSubmit(
+  event: Pick<FormEvent<HTMLFormElement>, "preventDefault">,
+  checkoutState: CheckoutState,
+) {
+  event.preventDefault();
+  return checkoutState === "success";
+}
 
 export default function BookingCard({ villa }: { villa: Villa }) {
-  const [guests, setGuests] = useState(Math.min(6, villa.guests));
+  const [guests, setGuests] = useState(1);
   const [nights, setNights] = useState(DEFAULT_NIGHTS);
-  const [checkIn, setCheckIn] = useState(new Date(2026, 6, 12));
-  const [checkOut, setCheckOut] = useState(new Date(2026, 6, 17));
+  const [{ checkIn, checkOut }, setDates] = useState(defaultBookingDates);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [checkoutState, setCheckoutState] = useState<CheckoutState>("idle");
+  const [confirmedTotal, setConfirmedTotal] = useState<number | null>(null);
+  const [error, setError] = useState("");
+  const inputId = useId();
+  const abortControllerRef = useRef<AbortController | null>(null);
   const extraGuests = Math.max(0, guests - 2);
   const guestFee = extraGuests * EXTRA_GUEST_FEE * nights;
   const subtotal = villa.price * nights;
   const service = Math.round((subtotal + guestFee) * SERVICE_RATE);
   const total = subtotal + guestFee + CLEANING_FEE + service;
+  const displayedTotal = confirmedTotal ?? total;
   const dateLabel = (date: Date) => date.toLocaleDateString("en-KE", { month: "short", day: "numeric" });
+  const isoDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => () => abortControllerRef.current?.abort(), []);
+
+  async function submitBooking(event: FormEvent<HTMLFormElement>) {
+    if (guardBookingSubmit(event, checkoutState)) return;
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    setCheckoutState("submitting");
+    setError("");
+    setConfirmedTotal(null);
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "content-type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+        signal: controller.signal,
+        body: JSON.stringify({
+          villaSlug: villa.slug,
+          checkIn: isoDate(checkIn),
+          checkOut: isoDate(checkOut),
+          guests,
+          guestName: name,
+          guestEmail: email,
+          guestPhone: phone,
+        }),
+      });
+      const booking = (await response.json()) as BookingResponse;
+      if (controller.signal.aborted) return;
+      if (!response.ok) throw new Error(booking.message || "Unable to start payment");
+
+      if (booking.amount !== undefined) setConfirmedTotal(booking.amount);
+      if (booking.status === "PAID") {
+        setCheckoutState("success");
+        return;
+      }
+      if (booking.status === "PAYMENT_FAILED") {
+        setCheckoutState("failure");
+        setError("We couldn't start the payment. Please try again.");
+        return;
+      }
+      if (booking.status === "EXPIRED") {
+        setCheckoutState("expired");
+        return;
+      }
+      if (!booking.reference) throw new Error("Unable to track payment");
+
+      setCheckoutState("pending");
+      const result = await pollBookingStatus(async () => {
+        const statusResponse = await fetch(`/api/bookings/${encodeURIComponent(booking.reference!)}`, { signal: controller.signal });
+        if (!statusResponse.ok) throw new Error("Unable to check payment");
+        return (await statusResponse.json()) as BookingResponse;
+      }, { signal: controller.signal });
+      if (controller.signal.aborted) return;
+      if (!result) {
+        setCheckoutState("failure");
+        setError("We couldn't confirm the payment yet. Please try again.");
+      } else if (result.status === "PAID") {
+        setCheckoutState("success");
+      } else if (result.status === "EXPIRED") {
+        setCheckoutState("expired");
+      } else {
+        setCheckoutState("failure");
+        setError("The payment was not completed. Please try again.");
+      }
+    } catch {
+      if (controller.signal.aborted) return;
+      setCheckoutState("failure");
+      setError("We couldn't start the payment. Please check your details and try again.");
+    } finally {
+      if (abortControllerRef.current === controller) abortControllerRef.current = null;
+    }
+  }
 
   return (
-    <div>
+    <form noValidate onSubmit={submitBooking}>
       <div className="rounded-3xl bg-white p-6 shadow-[0_30px_70px_-35px_rgba(38,37,33,0.45)] ring-1 ring-ink/5 sm:p-7">
         {/* Price + rating */}
         <div className="flex items-baseline justify-between">
@@ -88,22 +196,39 @@ export default function BookingCard({ villa }: { villa: Villa }) {
           </div>
           <AvailabilityCalendar
             onRangeChange={({ start, end, nights: selectedNights }) => {
-              setCheckIn(start);
-              setCheckOut(end);
+               setDates({ checkIn: start, checkOut: end });
               setNights(selectedNights);
             }}
           />
         </div>
 
+        <div className="mt-5 space-y-3">
+          <div>
+            <label htmlFor={`${inputId}-guest-name`} className="mb-1 block text-sm font-semibold text-ink-deep">Name</label>
+            <input id={`${inputId}-guest-name`} value={name} onChange={(event) => setName(event.target.value)} required autoComplete="name" className="w-full rounded-xl border border-sand-line px-4 py-3 text-ink-deep outline-none focus:border-terracotta" />
+          </div>
+          <div>
+            <label htmlFor={`${inputId}-guest-email`} className="mb-1 block text-sm font-semibold text-ink-deep">Email</label>
+            <input id={`${inputId}-guest-email`} type="email" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" className="w-full rounded-xl border border-sand-line px-4 py-3 text-ink-deep outline-none focus:border-terracotta" />
+          </div>
+          <div>
+            <label htmlFor={`${inputId}-guest-phone`} className="mb-1 block text-sm font-semibold text-ink-deep">Phone</label>
+            <input id={`${inputId}-guest-phone`} type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} required autoComplete="tel" aria-describedby={`${inputId}-phone-help`} className="w-full rounded-xl border border-sand-line px-4 py-3 text-ink-deep outline-none focus:border-terracotta" />
+            <p id={`${inputId}-phone-help`} className="mt-1 text-xs text-ink-soft">Use a Kenyan mobile number.</p>
+          </div>
+        </div>
+
         <button
-          type="button"
+          type={checkoutState === "success" ? "button" : "submit"}
+          disabled={checkoutState === "submitting" || checkoutState === "pending" || checkoutState === "success"}
           className="mt-4 w-full rounded-full bg-terracotta py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-terracotta/25 transition-colors hover:bg-terracotta-dark cursor-pointer"
         >
-          Reserve
+          {checkoutState === "submitting" ? "Starting payment..." : checkoutState === "pending" ? "Waiting for payment..." : checkoutState === "success" ? "Reservation confirmed" : checkoutState === "failure" || checkoutState === "expired" ? "Try payment again" : "Reserve"}
         </button>
-        <p className="mt-3 text-center text-sm text-ink-soft">
-          You won&apos;t be charged yet
+        <p className="mt-3 text-center text-sm text-ink-soft" aria-live="polite">
+          {checkoutState === "pending" ? "Check your phone to approve the payment request." : checkoutState === "success" ? "Payment received. Your reservation is confirmed." : checkoutState === "expired" ? "This payment window expired. Start a new attempt." : "You won&apos;t be charged yet"}
         </p>
+        {error && <p role="alert" className="mt-3 text-center text-sm font-medium text-terracotta-dark">{error}</p>}
 
         {/* Breakdown */}
         <dl className="mt-5 space-y-3 text-[15px] text-ink">
@@ -121,8 +246,8 @@ export default function BookingCard({ villa }: { villa: Villa }) {
           <Row label="Service fee" value={formatKES(service)} />
         </dl>
         <div className="mt-5 flex items-center justify-between border-t border-sand-line pt-5 text-ink-deep">
-          <span className="text-lg font-bold">Total</span>
-          <span className="text-lg font-bold">{formatKES(total)}</span>
+          <span className="text-lg font-bold">{confirmedTotal === null ? "Total" : "Server-confirmed reservation total"}</span>
+          <span className="text-lg font-bold">{formatKES(displayedTotal)}</span>
         </div>
       </div>
 
@@ -130,7 +255,7 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         <Lock className="h-4 w-4 text-teal-soft" />
         Secure payment · free cancellation for 48h
       </p>
-    </div>
+    </form>
   );
 }
 

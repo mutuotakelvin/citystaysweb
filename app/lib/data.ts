@@ -407,10 +407,10 @@ export const PEARL_HOUSE_REVIEWS: VillaReview[] = [
 export const getVillaReviews = (slug: string): VillaReview[] =>
   slug === "the-pearl-house" ? PEARL_HOUSE_REVIEWS : VILLA_REVIEWS;
 
-export const CLEANING_FEE = 11050;
+export const CLEANING_FEE = 0;
 export const EXTRA_GUEST_FEE = 1500;
-export const SERVICE_RATE = 0.12; // of the nightly subtotal
-export const DEFAULT_NIGHTS = 5;
+export const SERVICE_RATE = 0;
+export const DEFAULT_NIGHTS = 1;
 
 export const formatKES = (n: number) => `KES ${n.toLocaleString("en-KE")}`;
 
