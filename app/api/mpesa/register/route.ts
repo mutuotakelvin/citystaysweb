@@ -11,8 +11,9 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const result = await registerC2bUrls();
     const ok = result.ResponseCode === "0" || result.ResponseDescription === "success";
-    return Response.json({ success: ok, data: result }, { status: ok ? 200 : 422 });
+    return Response.json({ success: ok, data: result, env: process.env.MPESA_ENVIRONMENT, shortcode: process.env.MPESA_SHORTCODE, callbackUrl: process.env.MPESA_CALLBACK_URL }, { status: ok ? 200 : 422 });
   } catch (error) {
-    return Response.json({ success: false, message: (error as Error).message }, { status: 500 });
+    console.error("C2B register failed", error);
+    return Response.json({ success: false, message: (error as Error).message, env: process.env.MPESA_ENVIRONMENT, shortcode: process.env.MPESA_SHORTCODE, callbackUrl: process.env.MPESA_CALLBACK_URL }, { status: 500 });
   }
 }

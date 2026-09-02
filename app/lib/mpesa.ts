@@ -84,7 +84,13 @@ async function readJson(response: Response): Promise<Record<string, unknown>> {
     throw new Error(`M-Pesa request failed ${response.status}: ${text.slice(0, 500)}`);
   }
   if (!response.ok) {
-    const detail = (body.error_description as string) || (body.errorMessage as string) || (body.error as string) || text.slice(0, 500);
+    const detail =
+      (body.error_description as string) ||
+      (body.errorMessage as string) ||
+      (body.ResponseDescription as string) ||
+      (body.error as string) ||
+      JSON.stringify(body).slice(0, 500) ||
+      text.slice(0, 500);
     throw new Error(`M-Pesa request failed ${response.status}: ${detail}`);
   }
   return body;
