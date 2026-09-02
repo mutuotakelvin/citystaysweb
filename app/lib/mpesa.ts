@@ -140,6 +140,22 @@ export async function initiateStkPush(
   return body as unknown as StkPushResponse;
 }
 
+export async function registerC2bUrls(fetcher: typeof fetch = fetch): Promise<Record<string, unknown>> {
+  const config = getConfig();
+  const token = await getMpesaAccessToken(fetcher);
+  const response = await fetcher(`${getBaseUrl()}/mpesa/c2b/v1/registerurl`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({
+      ShortCode: config.shortcode,
+      ResponseType: "Completed",
+      ConfirmationURL: config.callbackUrl,
+      ValidationURL: config.callbackUrl,
+    }),
+  });
+  return readJson(response);
+}
+
 export function mapDarajaResult(resultCode: number): "SUCCEEDED" | "FAILED" {
   return resultCode === 0 ? "SUCCEEDED" : "FAILED";
 }
