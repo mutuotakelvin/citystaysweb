@@ -1,1 +1,2 @@
-export { POST, runtime } from "../../payment/callback/route";
+export const runtime = "nodejs";
+export { POST } from "../../payment/callback/route";
