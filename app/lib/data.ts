@@ -145,7 +145,7 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 15000,
+    price: 1,
     reviews: 128,
     image: "/photos/p05.jpg",
     description: [
