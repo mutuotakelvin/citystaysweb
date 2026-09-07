@@ -44,8 +44,13 @@ export default function AvailabilityCalendar({
       setEnd(0);
       return;
     }
-    const nextEnd = day > start ? day : start;
-    const nextStart = day > start ? start : day;
+    let nextStart = day > start ? start : day;
+    let nextEnd = day > start ? day : start;
+    if (nextEnd === nextStart) nextEnd = nextStart + 1;
+    if (nextEnd > days) {
+      nextStart = Math.max(1, days - 1);
+      nextEnd = days;
+    }
     setStart(nextStart);
     setEnd(nextEnd);
     const selectedStart = new Date(year, monthIndex, nextStart);

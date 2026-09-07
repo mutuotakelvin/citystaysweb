@@ -75,8 +75,11 @@ export async function POST(request: Request): Promise<Response> {
       villaSlug: input.villaSlug,
       phone: input.guestPhone,
     });
-  } catch {
-    return Response.json({ message: "Invalid booking details" }, { status: 400 });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    const issues = (error as { issues?: unknown })?.issues ?? (error as { errors?: unknown })?.errors;
+    console.error("Booking validation failed", { detail, issues, body });
+    return Response.json({ message: "Invalid booking details", detail: detail?.slice(0, 200) }, { status: 400 });
   }
 
   let villa;

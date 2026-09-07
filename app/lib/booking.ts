@@ -43,7 +43,7 @@ function parseIsoDate(value: string): Date {
 }
 
 export function normalizeKenyanPhone(input: string): string {
-  const value = input.replace(/\s/g, "");
+  const value = input.replace(/[\s\-()]/g, "");
 
   if (/^0[17]\d{8}$/.test(value)) {
     return `254${value.slice(1)}`;
@@ -60,12 +60,12 @@ export function normalizeKenyanPhone(input: string): string {
 
 const bookingInputSchema = z.object({
   name: z.string().trim().min(1),
-  email: z.email(),
+  email: z.string().trim().pipe(z.email()),
   checkIn: z.string().transform(parseIsoDate),
   checkOut: z.string().transform(parseIsoDate),
   guests: z.coerce.number().int().min(1),
   villaSlug: z.string().trim().min(1),
-  phone: z.string().transform(normalizeKenyanPhone),
+  phone: z.string().trim().transform(normalizeKenyanPhone),
 });
 
 export function normalizeBookingInput(input: unknown): BookingInput {

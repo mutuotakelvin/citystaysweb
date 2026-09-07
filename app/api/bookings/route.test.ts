@@ -66,7 +66,7 @@ describe("POST /api/bookings validation", () => {
     const response = await POST(request(body));
 
     expect(response.status).toBe(400);
-    expect(await response.json()).toEqual({ message: "Invalid booking details" });
+    expect(await response.json()).toEqual(expect.objectContaining({ message: "Invalid booking details" }));
     expect(prisma.booking.create).not.toHaveBeenCalled();
   });
 
