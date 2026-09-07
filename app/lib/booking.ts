@@ -74,9 +74,9 @@ export function normalizeBookingInput(input: unknown): BookingInput {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  if (booking.checkIn < today || booking.checkOut <= booking.checkIn) {
-    throw new Error("Booking dates are invalid");
-  }
+  if (booking.checkIn < today) throw new Error("Check-in cannot be in the past");
+  if (booking.checkOut <= booking.checkIn) throw new Error("Checkout must be after check-in");
+  if (Number.isNaN(booking.checkIn.getTime()) || Number.isNaN(booking.checkOut.getTime())) throw new Error("Invalid booking dates");
   if (booking.guests > villa.guests) {
     throw new Error("Guest count exceeds villa capacity");
   }

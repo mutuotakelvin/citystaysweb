@@ -63,6 +63,14 @@ export default function BookingCard({ villa }: { villa: Villa }) {
 
   async function submitBooking(event: FormEvent<HTMLFormElement>) {
     if (guardBookingSubmit(event, checkoutState)) return;
+    if (checkOut <= checkIn) {
+      const fixed = new Date(checkIn);
+      fixed.setDate(fixed.getDate() + 1);
+      setDates({ checkIn, checkOut: fixed });
+      setNights(1);
+      setError("Checkout must be after check-in — fixed to next day. Please tap Reserve again.");
+      return;
+    }
     abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -123,10 +131,12 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         setCheckoutState("failure");
         setError("The payment was not completed. Please try again.");
       }
-    } catch {
+    } catch (err) {
       if (controller.signal.aborted) return;
       setCheckoutState("failure");
-      setError("We couldn't start the payment. Please check your details and try again.");
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.includes("Checkout must be after")) setError(msg);
+      else setError("We couldn't start the payment. Please check your details and try again.");
     } finally {
       if (abortControllerRef.current === controller) abortControllerRef.current = null;
     }
