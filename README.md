@@ -24,7 +24,7 @@ Start the app locally:
 npm run dev
 ```
 
-Expose `/api/mpesa/callback` through a public HTTPS tunnel using ngrok or Cloudflare Tunnel. For example:
+Expose `/api/payment/callback` through a public HTTPS tunnel using ngrok or Cloudflare Tunnel. For example:
 
 ```bash
 ngrok http 3000
@@ -32,7 +32,7 @@ ngrok http 3000
 cloudflared tunnel --url http://localhost:3000
 ```
 
-Set `MPESA_CALLBACK_URL` in `.env.local` to the tunnel's HTTPS URL plus `/api/mpesa/callback`, restart the development server, and submit a reservation with Daraja sandbox credentials. Complete or cancel the STK prompt, then verify that the reservation status changes only after the callback is received.
+Set `MPESA_CALLBACK_URL` in `.env.local` to the tunnel's HTTPS URL plus `/api/payment/callback` (must not contain `mpesa` — Safaricom rejects `ValidationURL` with that word), restart the development server, and submit a reservation with Daraja sandbox credentials. Complete or cancel the STK prompt, then verify that the reservation status changes only after the callback is received. Legacy `/api/mpesa/callback` still works via shim for backward compatibility.
 
 Run the database checks locally with:
 

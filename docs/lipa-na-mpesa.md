@@ -116,16 +116,20 @@ outray 3000
 For another tunnel provider, use its equivalent command. Copy the HTTPS URL it gives you and set:
 
 ```dotenv
-MPESA_CALLBACK_URL=https://your-tunnel.example/api/mpesa/callback
+MPESA_CALLBACK_URL=https://your-tunnel.example/api/payment/callback
 ```
+
+> Must not contain `mpesa`, `safaricom`, or `daraja` — Daraja returns `400 Invalid ValidationURL` otherwise.
 
 Restart Next.js after changing `.env.local`. Keep the tunnel process running throughout the test.
 
 The callback route is:
 
 ```text
-POST /api/mpesa/callback
+POST /api/payment/callback
 ```
+
+Legacy `POST /api/mpesa/callback` is kept as a shim.
 
 A browser `GET` to this route returns `405`; that is expected. Daraja must call it with `POST`.
 
@@ -212,7 +216,7 @@ The safe response exposes the reference, status, amount, currency, and guest-fac
 ### Daraja Callback
 
 ```text
-POST /api/mpesa/callback
+POST /api/payment/callback
 ```
 
 Successful callback result code `0` marks the payment and booking as paid only when the callback amount matches the booking amount. Failure result codes mark the payment and booking as failed unless the booking is already paid.
@@ -246,7 +250,7 @@ Confirm:
 
 - The tunnel is still running.
 - `MPESA_CALLBACK_URL` uses the current tunnel hostname.
-- The callback URL ends with `/api/mpesa/callback`.
+- The callback URL ends with `/api/payment/callback` (legacy `/api/mpesa/callback` also accepted).
 - The URL is HTTPS and publicly reachable.
 - The app was restarted after changing `.env.local`.
 

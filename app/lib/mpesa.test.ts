@@ -20,7 +20,7 @@ function configureSandbox() {
   process.env.MPESA_CONSUMER_SECRET = "consumer-secret";
   process.env.MPESA_SHORTCODE = "174379";
   process.env.MPESA_PASSKEY = "pass-key";
-  process.env.MPESA_CALLBACK_URL = "https://example.com/api/mpesa/callback";
+  process.env.MPESA_CALLBACK_URL = "https://example.com/api/payment/callback";
 }
 
 function jsonResponse(body: unknown, status = 200) {
@@ -135,7 +135,7 @@ describe("Daraja STK Push", () => {
       PhoneNumber: "254712345678",
       AccountReference: "BOOK1",
       TransactionDesc: "BOOK1",
-      CallBackURL: "https://example.com/api/mpesa/callback",
+      CallBackURL: "https://example.com/api/payment/callback",
     });
   });
 
