@@ -1,12 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "../icons";
-
-const BOOKED_BY_MONTH: Record<string, number[]> = {
-  "2026-6": [2, 3, 8, 9, 21, 22, 28],
-  "2026-7": [4, 5, 18, 19, 27],
-};
 
 function initialCalendarState() {
   const today = new Date();
@@ -19,19 +14,36 @@ function initialCalendarState() {
 
 export default function AvailabilityCalendar({
   onRangeChange,
+  villaSlug,
 }: {
   onRangeChange?: (range: { start: Date; end: Date; nights: number }) => void;
+  villaSlug?: string;
 }) {
   const initial = initialCalendarState();
   const [month, setMonth] = useState(initial.month);
   const [start, setStart] = useState(initial.start);
   const [end, setEnd] = useState(initial.end);
+  const [blocked, setBlocked] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!villaSlug) return;
+    fetch(`/api/availability?villaSlug=${encodeURIComponent(villaSlug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.blocked) setBlocked(new Set(data.blocked as string[]));
+      })
+      .catch(() => {});
+  }, [villaSlug]);
 
   const year = month.getFullYear();
   const monthIndex = month.getMonth();
   const days = new Date(year, monthIndex + 1, 0).getDate();
   const leadingBlanks = new Date(year, monthIndex, 1).getDay();
-  const booked = new Set(BOOKED_BY_MONTH[`${year}-${monthIndex}`] ?? []);
+  const booked = new Set(
+    Array.from(blocked)
+      .filter((d) => d.startsWith(`${year}-${String(monthIndex + 1).padStart(2, "0")}`))
+      .map((d) => Number(d.slice(8, 10))),
+  );
   const cells: (number | null)[] = [
     ...Array.from({ length: leadingBlanks }, () => null),
     ...Array.from({ length: days }, (_, i) => i + 1),

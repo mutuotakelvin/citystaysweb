@@ -1,5 +1,6 @@
 import { Prisma, type Prisma as PrismaTypes } from "@prisma/client";
 
+import { sendBookingConfirmation, sendPaymentFailed } from "../../../lib/email";
 import { mapDarajaResult, parseDarajaCallback } from "../../../lib/mpesa";
 import { prisma } from "../../../lib/prisma";
 
@@ -21,6 +22,8 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json(accepted);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let emailTarget: any = null;
   try {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
@@ -50,11 +53,30 @@ export async function POST(request: Request): Promise<Response> {
         },
       });
 
-      if (!isPaidBooking && !isExpiredBooking && (!isTerminalPayment && shouldSucceed || nextStatus === "FAILED" || !amountMatches)) {
-        await tx.booking.updateMany({
+      const willTransition = !isPaidBooking && !isExpiredBooking && (!isTerminalPayment && shouldSucceed || nextStatus === "FAILED" || !amountMatches);
+      if (willTransition) {
+        const updated = await tx.booking.updateMany({
           where: { id: payment.booking.id, status: "PENDING_PAYMENT" },
           data: { status: shouldSucceed ? "PAID" : "PAYMENT_FAILED" },
         });
+        if (!updated || (updated.count ?? 0) > 0) {
+          emailTarget = {
+            booking: {
+              guestEmail: payment.booking.guestEmail,
+              guestName: payment.booking.guestName,
+              villaSlug: payment.booking.villaSlug,
+              reference: payment.booking.reference,
+              checkIn: payment.booking.checkIn,
+              checkOut: payment.booking.checkOut,
+              guests: payment.booking.guests,
+              bedrooms: (payment.booking as any).bedrooms ?? null,
+              amount: payment.booking.amount,
+            },
+            shouldSucceed,
+            receiptNumber: callback.receiptNumber,
+            resultMessage: callback.resultMessage,
+          };
+        }
       }
         }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
         break;
@@ -65,6 +87,31 @@ export async function POST(request: Request): Promise<Response> {
   } catch {
     console.error("M-Pesa callback processing failed");
     return Response.json({ ResultCode: 1, ResultDesc: "Unable to process callback" }, { status: 500 });
+  }
+
+  if (emailTarget) {
+    if (emailTarget.shouldSucceed) {
+      void sendBookingConfirmation({
+        to: emailTarget.booking.guestEmail,
+        guestName: emailTarget.booking.guestName,
+        villaSlug: emailTarget.booking.villaSlug,
+        reference: emailTarget.booking.reference,
+        checkIn: emailTarget.booking.checkIn,
+        checkOut: emailTarget.booking.checkOut,
+        guests: emailTarget.booking.guests,
+        bedrooms: emailTarget.booking.bedrooms,
+        amount: emailTarget.booking.amount,
+        receiptNumber: emailTarget.receiptNumber,
+      });
+    } else {
+      void sendPaymentFailed({
+        to: emailTarget.booking.guestEmail,
+        guestName: emailTarget.booking.guestName,
+        villaSlug: emailTarget.booking.villaSlug,
+        reference: emailTarget.booking.reference,
+        reason: emailTarget.resultMessage,
+      });
+    }
   }
 
   return Response.json(accepted);

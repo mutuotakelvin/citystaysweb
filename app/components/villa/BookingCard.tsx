@@ -8,6 +8,7 @@ import {
   EXTRA_GUEST_FEE,
   DEFAULT_NIGHTS,
   formatKES,
+  getVillaPrice,
 } from "../../lib/data";
 import { Star, Minus, Plus, Lock } from "../icons";
 import AvailabilityCalendar from "./AvailabilityCalendar";
@@ -36,6 +37,7 @@ export function guardBookingSubmit(
 export default function BookingCard({ villa }: { villa: Villa }) {
   const [guests, setGuests] = useState(1);
   const [nights, setNights] = useState(DEFAULT_NIGHTS);
+  const [bedrooms, setBedrooms] = useState<number | null>(villa.pricingTiers?.[0]?.beds ?? null);
   const [{ checkIn, checkOut }, setDates] = useState(defaultBookingDates);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,9 +47,10 @@ export default function BookingCard({ villa }: { villa: Villa }) {
   const [error, setError] = useState("");
   const inputId = useId();
   const abortControllerRef = useRef<AbortController | null>(null);
+  const nightlyPrice = getVillaPrice(villa, bedrooms);
   const extraGuests = Math.max(0, guests - 2);
   const guestFee = extraGuests * EXTRA_GUEST_FEE * nights;
-  const subtotal = villa.price * nights;
+  const subtotal = nightlyPrice * nights;
   const service = Math.round((subtotal + guestFee) * SERVICE_RATE);
   const total = subtotal + guestFee + CLEANING_FEE + service;
   const displayedTotal = confirmedTotal ?? total;
@@ -88,6 +91,7 @@ export default function BookingCard({ villa }: { villa: Villa }) {
           checkIn: isoDate(checkIn),
           checkOut: isoDate(checkOut),
           guests,
+          bedrooms: villa.pricingTiers ? bedrooms : undefined,
           guestName: name,
           guestEmail: email,
           guestPhone: phone,
@@ -148,14 +152,30 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         {/* Price + rating */}
         <div className="flex items-baseline justify-between">
           <p className="text-ink-deep">
-            <span className="text-[1.7rem] font-bold">{formatKES(villa.price)}</span>
-            <span className="text-ink-soft"> / night</span>
+            <span className="text-[1.7rem] font-bold">{formatKES(nightlyPrice)}</span>
+            <span className="text-ink-soft"> / night{bedrooms ? ` · ${bedrooms}BR` : ""}</span>
           </p>
           <span className="flex items-center gap-1 text-sm font-semibold text-ink-deep">
             <Star className="h-4 w-4 text-gold" />
             {villa.rating}
           </span>
         </div>
+
+        {villa.pricingTiers && (
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            {villa.pricingTiers.map((tier) => (
+              <button
+                key={tier.beds}
+                type="button"
+                onClick={() => setBedrooms(tier.beds)}
+                className={`rounded-2xl border px-4 py-3 text-left transition ${bedrooms === tier.beds ? "border-terracotta bg-terracotta/10 ring-1 ring-terracotta" : "border-sand-line bg-white hover:border-ink/30"}`}
+              >
+                <div className={`text-sm font-bold ${bedrooms === tier.beds ? "text-terracotta-dark" : "text-ink-deep"}`}>{tier.label ?? `${tier.beds} Bedroom`}</div>
+                <div className="text-sm font-semibold text-ink-soft">{formatKES(tier.price)} / night</div>
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Dates + guests */}
         <div className="mt-5 rounded-2xl border border-sand-line">
@@ -205,6 +225,7 @@ export default function BookingCard({ villa }: { villa: Villa }) {
             <span className="text-sm text-ink-soft">{nights} nights</span>
           </div>
           <AvailabilityCalendar
+            villaSlug={villa.slug}
             onRangeChange={({ start, end, nights: selectedNights }) => {
                setDates({ checkIn: start, checkOut: end });
               setNights(selectedNights);
@@ -236,14 +257,14 @@ export default function BookingCard({ villa }: { villa: Villa }) {
           {checkoutState === "submitting" ? "Starting payment..." : checkoutState === "pending" ? "Waiting for payment..." : checkoutState === "success" ? "Reservation confirmed" : checkoutState === "failure" || checkoutState === "expired" ? "Try payment again" : "Reserve"}
         </button>
         <p className="mt-3 text-center text-sm text-ink-soft" aria-live="polite">
-          {checkoutState === "pending" ? "Check your phone to approve the payment request." : checkoutState === "success" ? "Payment received. Your reservation is confirmed." : checkoutState === "expired" ? "This payment window expired. Start a new attempt." : "You won&apos;t be charged yet"}
+          {checkoutState === "pending" ? "Check your phone to approve the payment request." : checkoutState === "success" ? "Payment received. Your reservation is confirmed." : checkoutState === "expired" ? "This payment window expired. Start a new attempt." : "You won't be charged yet"}
         </p>
         {error && <p role="alert" className="mt-3 text-center text-sm font-medium text-terracotta-dark">{error}</p>}
 
         {/* Breakdown */}
         <dl className="mt-5 space-y-3 text-[15px] text-ink">
           <Row
-            label={`${formatKES(villa.price)} × ${nights} nights`}
+            label={`${formatKES(nightlyPrice)} × ${nights} nights${bedrooms ? ` · ${bedrooms}BR` : ""}`}
             value={formatKES(subtotal)}
           />
           {extraGuests > 0 && (

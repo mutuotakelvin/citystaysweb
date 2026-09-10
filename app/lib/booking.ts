@@ -3,6 +3,7 @@ import {
   CLEANING_FEE,
   EXTRA_GUEST_FEE,
   getVilla,
+  getVillaPrice,
   SERVICE_RATE,
   type Villa,
 } from "./data";
@@ -17,6 +18,7 @@ export type BookingInput = {
   guests: number;
   villaSlug: string;
   phone: string;
+  bedrooms?: number | null;
 };
 
 export type BookingTotal = {
@@ -66,6 +68,7 @@ const bookingInputSchema = z.object({
   guests: z.coerce.number().int().min(1),
   villaSlug: z.string().trim().min(1),
   phone: z.string().trim().transform(normalizeKenyanPhone),
+  bedrooms: z.coerce.number().int().optional().nullable(),
 });
 
 export function normalizeBookingInput(input: unknown): BookingInput {
@@ -80,16 +83,21 @@ export function normalizeBookingInput(input: unknown): BookingInput {
   if (booking.guests > villa.guests) {
     throw new Error("Guest count exceeds villa capacity");
   }
+  if (booking.bedrooms != null && villa.pricingTiers?.length) {
+    const ok = villa.pricingTiers.some((t) => t.beds === booking.bedrooms);
+    if (!ok) throw new Error("Invalid bedroom selection");
+  }
 
   return booking;
 }
 
-export function calculateBookingTotal(villa: Villa, nights: number, guests: number): BookingTotal {
+export function calculateBookingTotal(villa: Villa, nights: number, guests: number, bedrooms?: number | null): BookingTotal {
   if (!Number.isInteger(nights) || nights < 1 || !Number.isInteger(guests) || guests < 1 || guests > villa.guests) {
     throw new Error("Invalid booking totals");
   }
 
-  const subtotal = villa.price * nights;
+  const price = getVillaPrice(villa, bedrooms);
+  const subtotal = price * nights;
   const guestFee = Math.max(0, guests - 2) * EXTRA_GUEST_FEE * nights;
   const serviceFee = Math.round((subtotal + guestFee) * SERVICE_RATE);
 

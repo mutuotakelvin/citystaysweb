@@ -6,7 +6,7 @@ const { villa, prisma, initiateStkPush } = vi.hoisted(() => ({
   villa: { slug: "galu-beachfront-villa", guests: 10, price: 15000 },
   prisma: {
     $transaction: vi.fn(),
-    booking: { create: vi.fn(), findUnique: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
+    booking: { create: vi.fn(), findUnique: vi.fn(), findFirst: vi.fn(), update: vi.fn(), updateMany: vi.fn() },
     paymentAttempt: { create: vi.fn(), update: vi.fn() },
   },
   initiateStkPush: vi.fn(),

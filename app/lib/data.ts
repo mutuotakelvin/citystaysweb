@@ -14,6 +14,8 @@ export type Destination = {
   gallery: string[];
 };
 
+export type VillaPricingTier = { beds: number; price: number; label?: string };
+
 export type Villa = {
   slug: string;
   name: string;
@@ -25,6 +27,7 @@ export type Villa = {
   baths: number;
   guests: number;
   price: number;
+  pricingTiers?: VillaPricingTier[];
   reviews: number;
   image: string;
   gallery?: string[];
@@ -146,6 +149,10 @@ export const VILLAS: Villa[] = [
     baths: 5,
     guests: 10,
     price: 1,
+    pricingTiers: [
+      { beds: 3, price: 1, label: "3 Bedroom · Main House" },
+      { beds: 5, price: 1, label: "5 Bedroom · + Cottage" },
+    ],
     reviews: 128,
     image: "/photos/p05.jpg",
     description: [
@@ -309,7 +316,7 @@ export const VILLA_HIGHLIGHTS = [
   {
     icon: "cottage",
     title: "2-bedroom guest cottage",
-    body: "Independent annexe for extended family or staff.",
+    body: "Included with 5BR — main house is 3BR. Book cottage only with full villa.",
   },
   {
     icon: "clock",
@@ -415,6 +422,14 @@ export const DEFAULT_NIGHTS = 1;
 export const formatKES = (n: number) => `KES ${n.toLocaleString("en-KE")}`;
 
 export const getVilla = (slug: string) => VILLAS.find((v) => v.slug === slug);
+
+export function getVillaPrice(villa: Villa, bedrooms?: number | null): number {
+  if (bedrooms && villa.pricingTiers?.length) {
+    const tier = villa.pricingTiers.find((t) => t.beds === bedrooms);
+    if (tier) return tier.price;
+  }
+  return villa.price;
+}
 
 /** Gallery for a villa: its own hero photo plus its destination's gallery. */
 export function villaGallery(v: Villa): string[] {
