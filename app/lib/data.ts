@@ -148,10 +148,10 @@ export const VILLAS: Villa[] = [
     beds: 5,
     baths: 5,
     guests: 10,
-    price: 1,
+    price: 15000,
     pricingTiers: [
-      { beds: 3, price: 1, label: "3 Bedroom · Main House" },
-      { beds: 5, price: 1, label: "5 Bedroom · + Cottage" },
+      { beds: 3, price: 10000, label: "3 Bedroom · Main House" },
+      { beds: 5, price: 15000, label: "5 Bedroom · + Cottage" },
     ],
     reviews: 128,
     image: "/photos/p05.jpg",
