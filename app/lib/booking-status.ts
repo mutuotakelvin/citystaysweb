@@ -6,7 +6,7 @@ const TERMINAL_STATUSES = new Set<BookingStatus>(["PAID", "PAYMENT_FAILED", "EXP
 
 export async function pollBookingStatus<T extends StatusResponse>(
   getStatus: () => Promise<T>,
-  { intervalMs = 2000, maxAttempts = 15, signal }: { intervalMs?: number; maxAttempts?: number; signal?: AbortSignal } = {},
+  { intervalMs = 2000, maxAttempts = 60, signal }: { intervalMs?: number; maxAttempts?: number; signal?: AbortSignal } = {},
 ): Promise<T | null> {
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     if (signal?.aborted) throw new DOMException("Polling aborted", "AbortError");

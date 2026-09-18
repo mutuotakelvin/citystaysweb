@@ -122,7 +122,7 @@ export default function BookingCard({ villa }: { villa: Villa }) {
         const statusResponse = await fetch(`/api/bookings/${encodeURIComponent(booking.reference!)}`, { signal: controller.signal });
         if (!statusResponse.ok) throw new Error("Unable to check payment");
         return (await statusResponse.json()) as BookingResponse;
-      }, { signal: controller.signal });
+      }, { intervalMs: 3000, maxAttempts: 40, signal: controller.signal });
       if (controller.signal.aborted) return;
       if (!result) {
         setCheckoutState("failure");
