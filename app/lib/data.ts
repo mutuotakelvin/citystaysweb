@@ -44,10 +44,10 @@ export type Testimonial = {
 };
 
 export const HERO_SLIDES = [
-  { place: "Diani", image: "/photos/p16.jpg", caption: "Galu Beach" },
-  { place: "Malindi", image: "/photos/p05.jpg", caption: "Old town & ocean" },
-  { place: "Naivasha", image: "/photos/p19.jpg", caption: "Rift Valley lakes" },
-  { place: "Nanyuki", image: "/photos/p21.jpg", caption: "Foot of Mount Kenya" },
+  { place: "Tulia", image: "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.15 PM.jpeg", caption: "Courtyard House · Diani" },
+  { place: "Mwezi", image: "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.40 PM.jpeg", caption: "Garden Villa · Kilifi" },
+  { place: "White House", image: "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM.jpeg", caption: "Pwani · Malindi" },
+  { place: "Kaya", image: "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.25 PM.jpeg", caption: "Lounge House · Diani" },
 ] as const;
 
 export const DESTINATIONS: Destination[] = [
@@ -59,8 +59,8 @@ export const DESTINATIONS: Destination[] = [
     tagline: "Powder-white sand and warm Indian Ocean",
     blurb:
       "Kenya's most celebrated beach — barefoot luxury, coral reefs a short swim away, and villas tucked into coastal forest.",
-    hero: "/photos/p16.jpg",
-    card: "/photos/p16.jpg",
+    hero: "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.15 PM.jpeg",
+    card: "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.15 PM.jpeg",
     gallery: ["/photos/p05.jpg", "/photos/p19.jpg", "/photos/p07.jpg", "/photos/p09.jpg", "/photos/diani-1.jpg", "/photos/diani-4.jpg"],
   },
   {
@@ -83,8 +83,8 @@ export const DESTINATIONS: Destination[] = [
     tagline: "Creekside calm and bohemian villas",
     blurb:
       "Kilifi Creek, dhow sunsets and a creative community. Garden villas with private chefs and slow mornings.",
-    hero: "/photos/p19.jpg",
-    card: "/photos/p19.jpg",
+    hero: "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.40 PM.jpeg",
+    card: "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.40 PM.jpeg",
     gallery: ["/photos/p21.jpg", "/photos/p05.jpg", "/photos/p10.jpg", "/photos/p13.jpg", "/photos/diani-3.jpg", "/photos/diani-11.jpg"],
   },
   {
@@ -95,8 +95,8 @@ export const DESTINATIONS: Destination[] = [
     tagline: "Swahili heritage and golden beaches",
     blurb:
       "Centuries of Swahili history meet long golden beaches. Malindi blends old-town character with beachfront ease.",
-    hero: "/photos/p03.jpg",
-    card: "/photos/p03.jpg",
+    hero: "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM.jpeg",
+    card: "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM.jpeg",
     gallery: ["/photos/malindi-5.jpg", "/photos/malindi-8.jpg", "/photos/malindi-12.jpg", "/photos/malindi-2.jpg", "/photos/malindi-16.jpg", "/photos/malindi-20.jpg"],
   },
   {
@@ -178,7 +178,22 @@ export const VILLAS: Villa[] = [
     guests: 8,
     price: 12000,
     reviews: 74,
-    image: "/photos/p19.jpg",
+    image: "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.15 PM.jpeg",
+    gallery: [
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.15 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.21 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.23 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.24 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.24 PM (1).jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.25 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.26 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.26 PM (1).jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.27 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.27 PM (1).jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.28 PM.jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.28 PM (1).jpeg",
+      "/photos/Tulia/WhatsApp Image 2026-09-17 at 4.33.29 PM.jpeg",
+    ],
   },
   {
     slug: "bahari-pool-retreat",
@@ -206,7 +221,23 @@ export const VILLAS: Villa[] = [
     guests: 9,
     price: 12000,
     reviews: 91,
-    image: "/photos/p21.jpg",
+    image: "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.40 PM.jpeg",
+    gallery: [
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.40 PM.jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.41 PM.jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.41 PM (1).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.41 PM (2).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.41 PM (3).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.42 PM.jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.42 PM (1).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.42 PM (2).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.43 PM.jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.43 PM (1).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.43 PM (2).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.44 PM.jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.44 PM (1).jpeg",
+      "/photos/Mwezi Garden Villa/WhatsApp Image 2026-09-17 at 4.43.44 PM (2).jpeg",
+    ],
   },
   {
     slug: "pwani-white-house",
@@ -220,7 +251,20 @@ export const VILLAS: Villa[] = [
     guests: 10,
     price: 12000,
     reviews: 43,
-    image: "/photos/p01.jpg",
+    image: "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM.jpeg",
+    gallery: [
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.41 PM (1).jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.42 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.43 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.44 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.45 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.46 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.46 PM (1).jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.47 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.48 PM.jpeg",
+      "/photos/white house/WhatsApp Image 2026-09-17 at 4.48.48 PM (1).jpeg",
+    ],
   },
   {
     slug: "kaya-lounge-house",
@@ -234,7 +278,17 @@ export const VILLAS: Villa[] = [
     guests: 6,
     price: 7000,
     reviews: 67,
-    image: "/photos/p03.jpg",
+    image: "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.25 PM.jpeg",
+    gallery: [
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.25 PM.jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.26 PM.jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.26 PM (1).jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.27 PM.jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.27 PM (1).jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.28 PM.jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.28 PM (1).jpeg",
+      "/photos/kaya/WhatsApp Image 2026-09-17 at 4.39.29 PM.jpeg",
+    ],
   },
   {
     slug: "the-pearl-house",
