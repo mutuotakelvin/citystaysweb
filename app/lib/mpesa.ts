@@ -31,6 +31,7 @@ type MpesaConfig = {
   consumerKey: string;
   consumerSecret: string;
   shortcode: string;
+  partyB: string;
   passkey: string;
   callbackUrl: string;
   transactionType: "CustomerPayBillOnline" | "CustomerBuyGoodsOnline";
@@ -54,8 +55,11 @@ function getConfig(): MpesaConfig {
   }
   const rawType = process.env.MPESA_TRANSACTION_TYPE || "CustomerPayBillOnline";
   if (rawType !== "CustomerPayBillOnline" && rawType !== "CustomerBuyGoodsOnline") throw new Error("MPESA_TRANSACTION_TYPE must be CustomerPayBillOnline or CustomerBuyGoodsOnline");
+  // Till + Store setup: BusinessShortCode = Till, PartyB = Store Number.
+  // PayBill setup: omit MPESA_PARTY_B / MPESA_STORE_NUMBER to default PartyB to the shortcode.
+  const partyB = (process.env.MPESA_PARTY_B || process.env.MPESA_STORE_NUMBER || values.shortcode as string).trim();
 
-  return { environment, ...values, transactionType: rawType } as MpesaConfig;
+  return { environment, ...values, partyB, transactionType: rawType } as MpesaConfig;
 }
 
 function getBaseUrl(): string {
@@ -132,7 +136,7 @@ export async function initiateStkPush(
       TransactionType: config.transactionType,
       Amount: amount,
       PartyA: phone,
-      PartyB: config.shortcode,
+      PartyB: config.partyB,
       PhoneNumber: phone,
       CallBackURL: config.callbackUrl,
       AccountReference: input.bookingReference,
