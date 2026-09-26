@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "../icons";
 
 function initialCalendarState() {
@@ -14,7 +14,6 @@ function initialCalendarState() {
 
 export default function AvailabilityCalendar({
   onRangeChange,
-  villaSlug,
 }: {
   onRangeChange?: (range: { start: Date; end: Date; nights: number }) => void;
   villaSlug?: string;
@@ -23,37 +22,27 @@ export default function AvailabilityCalendar({
   const [month, setMonth] = useState(initial.month);
   const [start, setStart] = useState(initial.start);
   const [end, setEnd] = useState(initial.end);
-  const [blocked, setBlocked] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (!villaSlug) return;
-    fetch(`/api/availability?villaSlug=${encodeURIComponent(villaSlug)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.blocked) setBlocked(new Set(data.blocked as string[]));
-      })
-      .catch(() => {});
-  }, [villaSlug]);
 
   const year = month.getFullYear();
   const monthIndex = month.getMonth();
   const days = new Date(year, monthIndex + 1, 0).getDate();
   const leadingBlanks = new Date(year, monthIndex, 1).getDay();
-  const booked = new Set(
-    Array.from(blocked)
-      .filter((d) => d.startsWith(`${year}-${String(monthIndex + 1).padStart(2, "0")}`))
-      .map((d) => Number(d.slice(8, 10))),
-  );
   const cells: (number | null)[] = [
     ...Array.from({ length: leadingBlanks }, () => null),
     ...Array.from({ length: days }, (_, i) => i + 1),
   ];
 
   function selectDay(day: number) {
-    if (booked.has(day)) return;
     if (!start || end) {
       setStart(day);
       setEnd(0);
+      const selectedStart = new Date(year, monthIndex, day);
+      const selectedEnd = new Date(year, monthIndex, Math.min(day + 1, days));
+      onRangeChange?.({
+        start: selectedStart,
+        end: selectedEnd,
+        nights: Math.max(1, Math.round((selectedEnd.getTime() - selectedStart.getTime()) / 86400000)),
+      });
       return;
     }
     let nextStart = day > start ? start : day;
@@ -105,22 +94,18 @@ export default function AvailabilityCalendar({
           const isStart = day === start;
           const isEnd = day === end;
           const inRange = start > 0 && end > 0 && day > start && day < end;
-          const isBooked = booked.has(day);
           return (
             <div key={day} className="flex justify-center">
               <button
                 type="button"
-                disabled={isBooked}
                 onClick={() => selectDay(day)}
-                aria-label={`${monthName} ${day}${isBooked ? ", unavailable" : ""}`}
+                aria-label={`${monthName} ${day}`}
                 className={`grid h-10 w-10 place-items-center rounded-full text-sm transition-colors ${
                   isStart || isEnd
                     ? "bg-terracotta font-semibold text-white"
                     : inRange
                       ? "bg-terracotta-soft text-ink-deep"
-                      : isBooked
-                        ? "text-ink-soft/40 line-through cursor-not-allowed"
-                        : "text-ink-deep hover:bg-sand-deep cursor-pointer"
+                      : "text-ink-deep hover:bg-sand-deep cursor-pointer"
                 }`}
               >
                 {day}
@@ -132,7 +117,6 @@ export default function AvailabilityCalendar({
 
       <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-soft">
         <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm bg-terracotta" />Selected</span>
-        <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm bg-sand-deep" />Booked</span>
       </div>
     </div>
   );

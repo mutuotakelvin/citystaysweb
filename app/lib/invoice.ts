@@ -130,7 +130,7 @@ export async function generateInvoicePdf(input: InvoiceInput): Promise<Buffer> {
     y = 420;
     doc.fillColor("#1a1a1a").font("Helvetica-Bold").fontSize(8).text("Payment", 48, y);
     doc.font("Helvetica").fontSize(8).fillColor(muted)
-      .text(`Method: M-Pesa Daraja  •  Status: Paid`, 48, y + 10)
+      .text(`Method: M-Pesa  •  Status: Paid`, 48, y + 10)
       .text(input.receiptNumber ? `Receipt: ${input.receiptNumber}` : `Reference: ${input.reference}`, 48, y + 20);
 
     doc.fillColor(teal).fontSize(8).font("Helvetica-Bold").text("Thank you for choosing Lobelia Pearl.", 48, 500, { align: "center", width: 499 });

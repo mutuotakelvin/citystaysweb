@@ -89,18 +89,6 @@ export async function POST(request: Request): Promise<Response> {
   } catch {
     return Response.json({ message: "Invalid booking details" }, { status: 404 });
   }
-  const overlapping = await prisma.booking.findFirst({
-    where: {
-      villaSlug: bookingInput.villaSlug,
-      status: "PAID",
-      checkIn: { lt: bookingInput.checkOut },
-      checkOut: { gt: bookingInput.checkIn },
-    },
-    select: { id: true },
-  });
-  if (overlapping) {
-    return Response.json({ message: "Selected dates are already booked" }, { status: 409 });
-  }
   const amount = calculateBookingTotal(villa, nightsBetween(bookingInput.checkIn, bookingInput.checkOut), bookingInput.guests, bookingInput.bedrooms).total;
   let reference = "";
   let booking: { id: string } | undefined;
